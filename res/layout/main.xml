@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+  android:orientation="horizontal"
+  android:layout_gravity="center"
+  android:layout_height="wrap_content">
+<TextView
+  android:layout_width="8px"
+  android:layout_height="wrap_content"
+  android:text="@string/empty"/>  
+  
+<!-- http://www.iconarchive.com/category/application/button-icons-by-deleket.html -->  
+<ImageButton android:text="Status" android:id="@+id/button_status"
+       android:layout_gravity="center_horizontal|center_vertical"
+       android:layout_height="48sp"
+       android:layout_width="48sp"
+       android:src="@drawable/status"/>
+<ImageButton android:text="Start" android:id="@+id/button_start"
+       android:layout_gravity="center_horizontal|center_vertical"
+       android:layout_height="48sp"
+       android:layout_width="48sp"
+       android:src="@drawable/start"/>
+<ImageButton android:text="Pause" android:id="@+id/button_pause"
+       android:layout_gravity="center_horizontal|center_vertical"
+       android:layout_height="48sp"
+       android:layout_width="48sp"
+       android:src="@drawable/pause"/>
+</LinearLayout>
