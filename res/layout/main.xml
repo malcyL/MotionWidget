@@ -12,17 +12,26 @@
 <!-- http://www.iconarchive.com/category/application/button-icons-by-deleket.html -->  
 <ImageButton android:text="Status" android:id="@+id/button_status"
        android:layout_gravity="center_horizontal|center_vertical"
-       android:layout_height="48sp"
-       android:layout_width="48sp"
+       android:layout_height="64sp"
+       android:layout_width="64sp"
+       android:background="@drawable/status"
        android:src="@drawable/status"/>
 <ImageButton android:text="Start" android:id="@+id/button_start"
        android:layout_gravity="center_horizontal|center_vertical"
-       android:layout_height="48sp"
-       android:layout_width="48sp"
+       android:layout_height="64sp"
+       android:layout_width="64sp"
+       android:background="@drawable/start"
        android:src="@drawable/start"/>
 <ImageButton android:text="Pause" android:id="@+id/button_pause"
        android:layout_gravity="center_horizontal|center_vertical"
-       android:layout_height="48sp"
-       android:layout_width="48sp"
+       android:layout_height="64sp"
+       android:layout_width="64sp"
+       android:background="@drawable/pause"
        android:src="@drawable/pause"/>
+<ImageButton android:text="Snapshot" android:id="@+id/button_snapshot"
+       android:layout_gravity="center_horizontal|center_vertical"
+       android:layout_height="64sp"
+       android:layout_width="64sp"
+       android:background="@drawable/snapshot"
+       android:src="@drawable/snapshot"/>
 </LinearLayout>

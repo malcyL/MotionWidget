@@ -46,10 +46,12 @@ public class MotionWidget extends AppWidgetProvider {
 	public static String ACTION_WIDGET_STATUS = "ActionWidgetStatus";
 	public static String ACTION_WIDGET_START = "ActionWidgetStart";
 	public static String ACTION_WIDGET_PAUSE = "ActionWidgetPause";
+	public static String ACTION_WIDGET_SNAPSHOT = "ActionWidgetSnapshot";
 
 	private static final String STATUS_URL = "/0/detection/status";
 	private static final String START_URL = "/0/detection/start";
 	private static final String PAUSE_URL = "/0/detection/pause";
+	private static final String SNAPSHOT_URL = "/0/action/snapshot";
 	
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -64,13 +66,18 @@ public class MotionWidget extends AppWidgetProvider {
 	  Intent pauseIntent = new Intent(context, MotionWidget.class);
 	  pauseIntent.setAction(ACTION_WIDGET_PAUSE);
 
+	  Intent snapshotIntent = new Intent(context, MotionWidget.class);
+	  snapshotIntent.setAction(ACTION_WIDGET_SNAPSHOT);
+
 	  PendingIntent statusPendingIntent = PendingIntent.getBroadcast(context, 0, statusIntent, 0);
 	  PendingIntent startPendingIntent = PendingIntent.getBroadcast(context, 0, startIntent, 0);
 	  PendingIntent pausePendingIntent = PendingIntent.getBroadcast(context, 0, pauseIntent, 0);
+	  PendingIntent snapshotPendingIntent = PendingIntent.getBroadcast(context, 0, snapshotIntent, 0);
 	  
 	  remoteViews.setOnClickPendingIntent(R.id.button_status, statusPendingIntent);
 	  remoteViews.setOnClickPendingIntent(R.id.button_start, startPendingIntent);
 	  remoteViews.setOnClickPendingIntent(R.id.button_pause, pausePendingIntent);
+	  remoteViews.setOnClickPendingIntent(R.id.button_snapshot, snapshotPendingIntent);
 
 	  appWidgetManager.updateAppWidget(appWidgetIds, remoteViews);
 
@@ -102,6 +109,9 @@ public class MotionWidget extends AppWidgetProvider {
 		}			
 		if (intent.getAction().equals(ACTION_WIDGET_PAUSE)) {
 			msg = pauseDetection(client, externalUrlBase, internalUrlBase);
+		}			
+		if (intent.getAction().equals(ACTION_WIDGET_SNAPSHOT)) {
+			msg = snapshot(client, externalUrlBase, internalUrlBase);
 		}			
 		
 		if (msg != null) {
@@ -200,6 +210,32 @@ public class MotionWidget extends AppWidgetProvider {
 			return "Unauthorised to access Motion.";
 		} else {
 			return "Detection pause failed. HTTP Status: " + status;
+		}
+	}
+
+	private String snapshot(HttpClient client, String externalUrlBase, String internalUrlBase) {
+		try {
+			try {
+				return makeSnapshotRequest(client, externalUrlBase + SNAPSHOT_URL);
+			} catch (HttpHostConnectException e) {
+				return makeSnapshotRequest(client, internalUrlBase + SNAPSHOT_URL);
+			}
+		} catch (Throwable t) {
+			return "Unable to connect to Motion";
+		}		
+	}
+
+	private String makeSnapshotRequest(HttpClient client, String pauseUrl) throws IOException,
+			ClientProtocolException {
+		HttpUriRequest request = new HttpGet(pauseUrl);
+		HttpResponse response = client.execute(request);
+		int status = response.getStatusLine().getStatusCode();
+		if (status == 200) {
+			return "Snapshot Taken";
+		} else if (status == 401) {
+			return "Unauthorised to access Motion.";
+		} else {
+			return "Snapshot failed. HTTP Status: " + status;
 		}
 	}
 

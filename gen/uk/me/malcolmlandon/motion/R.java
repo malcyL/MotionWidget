@@ -13,10 +13,11 @@ public final class R {
     public static final class drawable {
         public static final int icon=0x7f020000;
         public static final int pause=0x7f020001;
-        public static final int start=0x7f020002;
-        public static final int status=0x7f020003;
-        public static final int widget_bg_normal=0x7f020004;
-        public static final int widget_frame_portrait=0x7f020005;
+        public static final int snapshot=0x7f020002;
+        public static final int start=0x7f020003;
+        public static final int status=0x7f020004;
+        public static final int widget_bg_normal=0x7f020005;
+        public static final int widget_frame_portrait=0x7f020006;
     }
     public static final class id {
         public static final int ExternalLabel=0x7f060001;
@@ -33,6 +34,7 @@ public final class R {
         public static final int UsernameLabel=0x7f060007;
         public static final int UsernameText=0x7f060008;
         public static final int button_pause=0x7f060011;
+        public static final int button_snapshot=0x7f060012;
         public static final int button_start=0x7f060010;
         public static final int button_status=0x7f06000f;
         public static final int cancelbutton=0x7f06000e;
