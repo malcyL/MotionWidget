@@ -9,7 +9,6 @@
     <receiver android:name=".MotionWidget" android:label="@string/app_name">
         <intent-filter>
             <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-<!--        <action android:name="uk.me.malcolmlandon.motion.MotionWidget.ACTION_WIDGET_RECEIVER"/> -->
             <action android:name="uk.me.malcolmlandon.motion.MotionWidget.ACTION_WIDGET_STATUS"/>
             <action android:name="uk.me.malcolmlandon.motion.MotionWidget.ACTION_WIDGET_START"/>
             <action android:name="uk.me.malcolmlandon.motion.MotionWidget.ACTION_WIDGET_PAUSE"/>
