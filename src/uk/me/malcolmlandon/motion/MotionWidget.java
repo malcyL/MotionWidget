@@ -48,10 +48,10 @@ public class MotionWidget extends AppWidgetProvider {
 	public static String ACTION_WIDGET_PAUSE = "ActionWidgetPause";
 	public static String ACTION_WIDGET_SNAPSHOT = "ActionWidgetSnapshot";
 
-	private static final String STATUS_URL = "/0/detection/status";
-	private static final String START_URL = "/0/detection/start";
-	private static final String PAUSE_URL = "/0/detection/pause";
-	private static final String SNAPSHOT_URL = "/0/action/snapshot";
+	private static final String STATUS_URL = "%s/%s/detection/status";
+	private static final String START_URL = "%s/%s/detection/start";
+	private static final String PAUSE_URL = "%s/%s/detection/pause";
+	private static final String SNAPSHOT_URL = "%s/%s/action/snapshot";
 	
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -91,27 +91,29 @@ public class MotionWidget extends AppWidgetProvider {
 		String internalUrlBase = "";
 		String username = "";
 		String password = "";
+		String camera = "";
 		if (prefs != null) {
 			externalUrlBase = prefs.getString("MotionWidget_external", "external url base not found");
 			internalUrlBase = prefs.getString("MotionWidget_internal", "internal url base not found");
 	        password = prefs.getString("MotionWidget_password", "password not found");
 	        username = prefs.getString("MotionWidget_username", "username not found");
+	        camera = prefs.getString("MotionWidget_camera", "camera not found");
 		}
 		
 		HttpClient client = getClient(username,password);
 		
 		String msg = null;
 		if (intent.getAction().equals(ACTION_WIDGET_STATUS)) {
-			msg = getStatus(client, externalUrlBase, internalUrlBase);
+			msg = getStatus(client, externalUrlBase, internalUrlBase, camera);
 		}			
 		if (intent.getAction().equals(ACTION_WIDGET_START)) {
-			msg = startDetection(client, externalUrlBase, internalUrlBase);
+			msg = startDetection(client, externalUrlBase, internalUrlBase, camera);
 		}			
 		if (intent.getAction().equals(ACTION_WIDGET_PAUSE)) {
-			msg = pauseDetection(client, externalUrlBase, internalUrlBase);
+			msg = pauseDetection(client, externalUrlBase, internalUrlBase, camera);
 		}			
 		if (intent.getAction().equals(ACTION_WIDGET_SNAPSHOT)) {
-			msg = snapshot(client, externalUrlBase, internalUrlBase);
+			msg = snapshot(client, externalUrlBase, internalUrlBase, camera);
 		}			
 		
 		if (msg != null) {
@@ -121,12 +123,12 @@ public class MotionWidget extends AppWidgetProvider {
 		super.onReceive(context, intent);
 	}
 
-	private String getStatus(HttpClient client, String externalUrlBase, String internalUrlBase) {
+	private String getStatus(HttpClient client, String externalUrlBase, String internalUrlBase, String camera) {
 		try {
 			try {
-				return makeStatusRequest(client, externalUrlBase + STATUS_URL);
+				return makeStatusRequest(client, String.format(STATUS_URL, externalUrlBase,camera));
 			} catch (HttpHostConnectException e) {
-				return makeStatusRequest(client, internalUrlBase + STATUS_URL);
+				return makeStatusRequest(client, String.format(STATUS_URL, internalUrlBase,camera));
 			}
 		} catch (Throwable t) {
 			return "Unable to connect to Motion";
@@ -160,12 +162,12 @@ public class MotionWidget extends AppWidgetProvider {
 		}
 	}
 	
-	private String startDetection(HttpClient client, String externalUrlBase, String internalUrlBase) {
+	private String startDetection(HttpClient client, String externalUrlBase, String internalUrlBase, String camera) {
 		try {
 			try {
-				return makeStartRequest(client, externalUrlBase + START_URL);
+				return makeStartRequest(client, String.format(START_URL, externalUrlBase, camera));
 			} catch (HttpHostConnectException e) {
-				return makeStartRequest(client, internalUrlBase + START_URL);
+				return makeStartRequest(client, String.format(START_URL, internalUrlBase, camera));
 			}
 		} catch (Throwable t) {
 			return "Unable to connect to Motion";
@@ -187,12 +189,12 @@ public class MotionWidget extends AppWidgetProvider {
 		}
 	}
 
-	private String pauseDetection(HttpClient client, String externalUrlBase, String internalUrlBase) {
+	private String pauseDetection(HttpClient client, String externalUrlBase, String internalUrlBase, String camera) {
 		try {
 			try {
-				return makePauseRequest(client, externalUrlBase + PAUSE_URL);
+				return makePauseRequest(client, String.format(PAUSE_URL, externalUrlBase, camera));
 			} catch (HttpHostConnectException e) {
-				return makePauseRequest(client, internalUrlBase + PAUSE_URL);
+				return makePauseRequest(client, String.format(PAUSE_URL, internalUrlBase, camera));
 			}
 		} catch (Throwable t) {
 			return "Unable to connect to Motion";
@@ -213,12 +215,12 @@ public class MotionWidget extends AppWidgetProvider {
 		}
 	}
 
-	private String snapshot(HttpClient client, String externalUrlBase, String internalUrlBase) {
+	private String snapshot(HttpClient client, String externalUrlBase, String internalUrlBase, String camera) {
 		try {
 			try {
-				return makeSnapshotRequest(client, externalUrlBase + SNAPSHOT_URL);
+				return makeSnapshotRequest(client, String.format(SNAPSHOT_URL, externalUrlBase, camera));
 			} catch (HttpHostConnectException e) {
-				return makeSnapshotRequest(client, internalUrlBase + SNAPSHOT_URL);
+				return makeSnapshotRequest(client, String.format(SNAPSHOT_URL, internalUrlBase, camera));
 			}
 		} catch (Throwable t) {
 			return "Unable to connect to Motion";

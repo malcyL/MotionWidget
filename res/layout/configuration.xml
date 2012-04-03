@@ -68,7 +68,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:padding="10dip"
-                android:text="The base URL of your motion server. e.g. just http://www.yourmotionserver.com when the full path to the camera API is http://www.yourmotionserver.com/0/detection/start"
+                android:text="The base URL of your motion server. e.g. just enter http://www.yourmotionserver.com when the full path to the camera API is http://www.yourmotionserver.com/0/detection/start"
                 android:textSize="10sp" />
         </TableRow>
 

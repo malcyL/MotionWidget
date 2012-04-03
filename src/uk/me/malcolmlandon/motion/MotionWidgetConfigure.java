@@ -45,6 +45,7 @@ public class MotionWidgetConfigure extends Activity {
 				String internalUrlBase = ((EditText)findViewById(R.id.InternalText)).getText().toString();
 				String username = ((EditText)findViewById(R.id.UsernameText)).getText().toString();
 				String password = ((EditText)findViewById(R.id.PasswordText)).getText().toString();
+				String camera = ((EditText)findViewById(R.id.CameraText)).getText().toString();
 
 				// save the goal date in SharedPreferences
 				// we can only store simple types only like long
@@ -57,6 +58,7 @@ public class MotionWidgetConfigure extends Activity {
 				edit.putString("MotionWidget_internal", internalUrlBase);
 				edit.putString("MotionWidget_username", username);
 				edit.putString("MotionWidget_password", password);
+				edit.putString("MotionWidget_camera", camera);
 				edit.commit();
 
 				// change the result to OK
