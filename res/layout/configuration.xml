@@ -1,87 +1,225 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="fill_parent"
-  android:layout_height="wrap_content"
-  android:orientation="vertical">
-        
-        <LinearLayout
-        android:id="@+id/LinearLayoutExternal"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        
-        		<TextView android:id="@+id/ExternalLabel"
-                android:layout_height="wrap_content"
-		        android:layout_width="wrap_content"
-		        android:text="External URL Base:" />
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tableLayout1"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
 
-        		<EditText android:id="@+id/ExternalText"
-                android:layout_height="wrap_content"
-		        android:layout_width="fill_parent" />
-        </LinearLayout>
-       
-        <LinearLayout
-        android:id="@+id/LinearLayoutInternal"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        
-        		<TextView android:id="@+id/InternalLabel"
-                android:layout_height="wrap_content"
-		        android:layout_width="wrap_content"
-		        android:text="Internal URL Base:" />
-
-        		<EditText android:id="@+id/InternalText"
-                android:layout_height="wrap_content"
-		        android:layout_width="fill_parent" />
-        </LinearLayout>
-       
-        <LinearLayout
-        android:id="@+id/LinearLayoutUsername"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        
-        		<TextView android:id="@+id/UsernameLabel"
-                android:layout_height="wrap_content"
-		        android:layout_width="wrap_content"
-		        android:text="Username:" />
-
-        		<EditText android:id="@+id/UsernameText"
-                android:layout_height="wrap_content"
-		        android:layout_width="fill_parent" />
-        </LinearLayout>
-       
-        <LinearLayout
-        android:id="@+id/LinearLayoutPassword"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        
-        		<TextView android:id="@+id/PasswordLabel"
-                android:layout_height="wrap_content"
-		        android:layout_width="wrap_content"
-		        android:text="Password:" />
-
-        		<EditText android:id="@+id/PasswordText"
-                android:layout_height="wrap_content"
-		        android:layout_width="fill_parent" />
-        </LinearLayout>
-       
-        <LinearLayout
-        android:id="@+id/LinearLayout01"
+    <TableRow
+        android:id="@+id/tableRow10"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-       
-                <Button android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/okbutton"
-                android:text="OK"></Button>
-                <Button android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Cancel"
-                android:id="@+id/cancelbutton"></Button>
-        </LinearLayout>
-</LinearLayout>
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/ExternalLabel"
+            android:textStyle="bold"
+            android:padding="10dip"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Motion Widget Configuration" />
+    </TableRow>
+
+	<View android:layout_height="2dip" android:background="#FF909090" />    
+
+    <TableRow
+        android:id="@+id/tableRow2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/ExternalLabel"
+            android:padding="10dip"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Motion URL Base:" />
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tableRow3"
+        android:paddingLeft="10dip"
+        android:paddingRight="10dip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <EditText
+            android:id="@+id/ExternalText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+    </TableRow>
+    
+    <TableRow
+        android:id="@+id/tableRow2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/ExternalHelp"
+            android:textSize="10sp"
+            android:padding="10dip"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="The base URL of your motion server. e.g. just http://www.yourdomain.com/motion when the full path to the camera API is http://www.yourdomain.com/motion/0/detection/start" />
+    </TableRow>
+
+    <View android:layout_height="2dip" android:background="#FF909090" />    
+
+    <TableRow
+        android:id="@+id/tableRow4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/InternalLabel"
+            android:padding="10dip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Alternative URL Base:" />
+        
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tableRow5"
+        android:paddingLeft="10dip"
+        android:paddingRight="10dip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <EditText
+            android:id="@+id/InternalText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tableRow2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/InternalHelp"
+            android:textSize="10sp"
+            android:padding="10dip"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="An alternative base URL for your motion server. Usefull when on the same home network as the motion server, when the external domain name does not resolve correctly. e.g. http://192.168.0.1/motion This 2nd URL will be used if the 1st is unreachable." />
+    </TableRow>
+
+    <View android:layout_height="2dip" android:background="#FF909090" />    
+
+    <TableRow
+        android:id="@+id/tableRow4"
+        android:paddingRight="10dip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/CameraLabel"
+            android:padding="10dip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Camera Number:" />
+
+        <EditText
+            android:id="@+id/CameraText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tableRow5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/CameraHelp"
+            android:textSize="10sp"
+            android:padding="10dip"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="The camera number. e.g. 0 from http://www.yourdomain.com/motion/0/detection/start" />
+    </TableRow>
+
+    <View android:layout_height="2dip" android:background="#FF909090" />    
+
+    <TableRow
+        android:id="@+id/tableRow6"
+        android:paddingRight="10dip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/UsernameLabel"
+            android:padding="10dip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Username:" />
+
+        <EditText
+            android:id="@+id/UsernameText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+    </TableRow>
+
+    <View android:layout_height="2dip" android:background="#FF909090" />    
+
+    <TableRow
+        android:id="@+id/tableRow8"
+        android:paddingRight="10dip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/PasswordLabel"
+            android:padding="10dip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Password:" />
+
+        <EditText
+            android:id="@+id/PasswordText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+    </TableRow>
+
+	<View android:layout_height="2dip" android:background="#FF909090" />    
+
+    <TableRow
+        android:id="@+id/tableRow1"
+        android:paddingTop="10dip"
+        android:paddingBottom="10dip"
+        android:paddingLeft="10dip"
+        android:paddingRight="10dip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/cancelbutton"
+            android:padding="10dip"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Cancel" >
+        </Button>
+
+        <Button
+            android:id="@+id/okbutton"
+            android:padding="10dip"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="OK" >
+        </Button>
+    </TableRow>
+
+</TableLayout>
