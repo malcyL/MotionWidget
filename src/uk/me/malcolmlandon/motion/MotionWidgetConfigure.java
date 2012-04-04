@@ -13,6 +13,14 @@ import android.widget.EditText;
 
 public class MotionWidgetConfigure extends Activity {
 
+	private static final String PREFS_NAME = "uk.me.malcolmlandon.motion.MotionWidgetConfigure";	
+	
+	public static final String MOTION_WIDGET_CAMERA = "MotionWidget_camera";
+	public static final String MOTION_WIDGET_PASSWORD = "MotionWidget_password";
+	public static final String MOTION_WIDGET_USERNAME = "MotionWidget_username";
+	public static final String MOTION_WIDGET_INTERNAL = "MotionWidget_internal";
+	public static final String MOTION_WIDGET_EXTERNAL = "MotionWidget_external";
+	
 	private Context self = this;
 	private int myAppWidgetId;
 
@@ -26,7 +34,7 @@ public class MotionWidgetConfigure extends Activity {
 			myAppWidgetId = extras.getInt(
 					AppWidgetManager.EXTRA_APPWIDGET_ID, 
 					AppWidgetManager.INVALID_APPWIDGET_ID);
-		}	
+		}
 
 		Intent cancelResultValue = new Intent();
 		cancelResultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,	myAppWidgetId);
@@ -35,7 +43,6 @@ public class MotionWidgetConfigure extends Activity {
 		setContentView(R.layout.configuration);
 
 
-		// the OK button
 		Button ok = (Button) findViewById(R.id.okbutton);
 		ok.setOnClickListener(new OnClickListener() {
 			@Override
@@ -47,41 +54,35 @@ public class MotionWidgetConfigure extends Activity {
 				String password = ((EditText)findViewById(R.id.PasswordText)).getText().toString();
 				String camera = ((EditText)findViewById(R.id.CameraText)).getText().toString();
 
-				// save the goal date in SharedPreferences
-				// we can only store simple types only like long
-				// if multiple widget instances are placed
-				// each can have own goal date
-				// so store it under a name that contains appWidgetId
-				SharedPreferences prefs = self.getSharedPreferences("prefs", 0);
+				SharedPreferences prefs = self.getSharedPreferences(PREFS_NAME, 0);
 				SharedPreferences.Editor edit = prefs.edit();
-				edit.putString("MotionWidget_external", externalUrlBase);
-				edit.putString("MotionWidget_internal", internalUrlBase);
-				edit.putString("MotionWidget_username", username);
-				edit.putString("MotionWidget_password", password);
-				edit.putString("MotionWidget_camera", camera);
+				edit.putString(MOTION_WIDGET_EXTERNAL+myAppWidgetId, externalUrlBase);
+				edit.putString(MOTION_WIDGET_INTERNAL+myAppWidgetId, internalUrlBase);
+				edit.putString(MOTION_WIDGET_USERNAME+myAppWidgetId, username);
+				edit.putString(MOTION_WIDGET_PASSWORD+myAppWidgetId, password);
+				edit.putString(MOTION_WIDGET_CAMERA+myAppWidgetId, camera);
 				edit.commit();
 
-				// change the result to OK
 				Intent resultValue = new Intent();
 				resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
 						myAppWidgetId);
 				setResult(RESULT_OK, resultValue);
-				// finish closes activity
-				// and sends the OK result
-				// the widget will be be placed on the home screen
+
 				finish();
 			}
 		});
 
-		// cancel button
 		Button cancel = (Button) findViewById(R.id.cancelbutton);
 		cancel.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
-				// finish sends the already configured cancel result
-				// and closes activity
 				finish();
 			}
 		});
 	}		
+	
+    static String loadPrefernece(Context context, String key, int appWidgetId) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
+        return prefs.getString(key + appWidgetId, "");
+    }	
 }

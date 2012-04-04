@@ -3,11 +3,6 @@ package uk.me.malcolmlandon.motion;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URL;
-
-import javax.net.ssl.SSLSocketFactory;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
@@ -27,17 +22,13 @@ import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
-import org.xml.sax.InputSource;
-import org.xml.sax.XMLReader;
 
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
@@ -57,48 +48,55 @@ public class MotionWidget extends AppWidgetProvider {
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
 	  RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.main);
 
-	  Intent statusIntent = new Intent(context, MotionWidget.class);
-	  statusIntent.setAction(ACTION_WIDGET_STATUS);
+	  int numWidgets = appWidgetIds.length;
+	  for (int i=0; i<numWidgets; i++) {
+		  int appWidgetId = appWidgetIds[i];
 
-	  Intent startIntent = new Intent(context, MotionWidget.class);
-	  startIntent.setAction(ACTION_WIDGET_START);
+		  Intent statusIntent = new Intent(context, MotionWidget.class);
+		  statusIntent.setAction(ACTION_WIDGET_STATUS);
+		  statusIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
 
-	  Intent pauseIntent = new Intent(context, MotionWidget.class);
-	  pauseIntent.setAction(ACTION_WIDGET_PAUSE);
+		  Intent startIntent = new Intent(context, MotionWidget.class);
+		  startIntent.setAction(ACTION_WIDGET_START);
+		  startIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
 
-	  Intent snapshotIntent = new Intent(context, MotionWidget.class);
-	  snapshotIntent.setAction(ACTION_WIDGET_SNAPSHOT);
+		  Intent pauseIntent = new Intent(context, MotionWidget.class);
+		  pauseIntent.setAction(ACTION_WIDGET_PAUSE);
+		  pauseIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
 
-	  PendingIntent statusPendingIntent = PendingIntent.getBroadcast(context, 0, statusIntent, 0);
-	  PendingIntent startPendingIntent = PendingIntent.getBroadcast(context, 0, startIntent, 0);
-	  PendingIntent pausePendingIntent = PendingIntent.getBroadcast(context, 0, pauseIntent, 0);
-	  PendingIntent snapshotPendingIntent = PendingIntent.getBroadcast(context, 0, snapshotIntent, 0);
-	  
-	  remoteViews.setOnClickPendingIntent(R.id.button_status, statusPendingIntent);
-	  remoteViews.setOnClickPendingIntent(R.id.button_start, startPendingIntent);
-	  remoteViews.setOnClickPendingIntent(R.id.button_pause, pausePendingIntent);
-	  remoteViews.setOnClickPendingIntent(R.id.button_snapshot, snapshotPendingIntent);
+		  Intent snapshotIntent = new Intent(context, MotionWidget.class);
+		  snapshotIntent.setAction(ACTION_WIDGET_SNAPSHOT);
+		  snapshotIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
 
-	  appWidgetManager.updateAppWidget(appWidgetIds, remoteViews);
+		  PendingIntent statusPendingIntent = PendingIntent.getBroadcast(context, appWidgetId, statusIntent, 0);
+		  PendingIntent startPendingIntent = PendingIntent.getBroadcast(context, appWidgetId, startIntent, 0);
+		  PendingIntent pausePendingIntent = PendingIntent.getBroadcast(context, appWidgetId, pauseIntent, 0);
+		  PendingIntent snapshotPendingIntent = PendingIntent.getBroadcast(context, appWidgetId, snapshotIntent, 0);
+		  
+		  remoteViews.setOnClickPendingIntent(R.id.button_status, statusPendingIntent);
+		  remoteViews.setOnClickPendingIntent(R.id.button_start, startPendingIntent);
+		  remoteViews.setOnClickPendingIntent(R.id.button_pause, pausePendingIntent);
+		  remoteViews.setOnClickPendingIntent(R.id.button_snapshot, snapshotPendingIntent);
 
+		  appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
+	  }
 	}
 	
 	@Override
 	public void onReceive(Context context, Intent intent) {
-
-		SharedPreferences prefs = context.getSharedPreferences("prefs", 0);
-		String externalUrlBase = "";
-		String internalUrlBase = "";
-		String username = "";
-		String password = "";
-		String camera = "";
-		if (prefs != null) {
-			externalUrlBase = prefs.getString("MotionWidget_external", "external url base not found");
-			internalUrlBase = prefs.getString("MotionWidget_internal", "internal url base not found");
-	        password = prefs.getString("MotionWidget_password", "password not found");
-	        username = prefs.getString("MotionWidget_username", "username not found");
-	        camera = prefs.getString("MotionWidget_camera", "camera not found");
+		
+		Bundle extras = intent.getExtras();
+		int mAppWidgetId = -1;
+		if (extras != null) {
+			mAppWidgetId = extras.getInt(
+					AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
 		}
+
+		String externalUrlBase = MotionWidgetConfigure.loadPrefernece(context, MotionWidgetConfigure.MOTION_WIDGET_EXTERNAL, mAppWidgetId);
+		String internalUrlBase = MotionWidgetConfigure.loadPrefernece(context, MotionWidgetConfigure.MOTION_WIDGET_INTERNAL, mAppWidgetId);
+		String password = MotionWidgetConfigure.loadPrefernece(context, MotionWidgetConfigure.MOTION_WIDGET_PASSWORD, mAppWidgetId);
+		String username = MotionWidgetConfigure.loadPrefernece(context, MotionWidgetConfigure.MOTION_WIDGET_USERNAME, mAppWidgetId);
+		String camera = MotionWidgetConfigure.loadPrefernece(context, MotionWidgetConfigure.MOTION_WIDGET_CAMERA, mAppWidgetId);
 		
 		HttpClient client = getClient(username,password);
 		
@@ -134,7 +132,6 @@ public class MotionWidget extends AppWidgetProvider {
 			return "Unable to connect to Motion";
 		}		
 	}
-
 
 	private String makeStatusRequest(HttpClient client, String statusUrl) throws IOException,
 			ClientProtocolException {
