@@ -184,7 +184,16 @@
                 android:padding="10dip"
                 android:text="Username:" />
 
-            <EditText
+        </TableRow>
+        
+        <TableRow
+            android:id="@+id/tableRowUsernameText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dip"
+            android:paddingRight="10dip" >
+        
+        	<EditText
                 android:id="@+id/UsernameText"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -208,6 +217,15 @@
                 android:padding="10dip"
                 android:text="Password:" />
 
+        </TableRow>
+        
+        <TableRow
+            android:id="@+id/tableRowPasswordText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dip"
+            android:paddingRight="10dip" >
+            
             <EditText
                 android:id="@+id/PasswordText"
                 android:layout_width="fill_parent"
