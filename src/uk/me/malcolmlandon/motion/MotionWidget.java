@@ -1,28 +1,5 @@
 package uk.me.malcolmlandon.motion;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpVersion;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.Credentials;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.conn.HttpHostConnectException;
-import org.apache.http.conn.scheme.PlainSocketFactory;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.params.HttpProtocolParams;
-
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -39,11 +16,6 @@ public class MotionWidget extends AppWidgetProvider {
 	public static String ACTION_WIDGET_PAUSE = "ActionWidgetPause";
 	public static String ACTION_WIDGET_SNAPSHOT = "ActionWidgetSnapshot";
 
-	private static final String STATUS_URL = "%s/%s/detection/status";
-	private static final String START_URL = "%s/%s/detection/start";
-	private static final String PAUSE_URL = "%s/%s/detection/pause";
-	private static final String SNAPSHOT_URL = "%s/%s/action/snapshot";
-	
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
 	  RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.main);
@@ -96,22 +68,19 @@ public class MotionWidget extends AppWidgetProvider {
 		String internalUrlBase = MotionWidgetConfigure.loadPrefernece(context, MotionWidgetConfigure.MOTION_WIDGET_INTERNAL, mAppWidgetId);
 		String password = MotionWidgetConfigure.loadPrefernece(context, MotionWidgetConfigure.MOTION_WIDGET_PASSWORD, mAppWidgetId);
 		String username = MotionWidgetConfigure.loadPrefernece(context, MotionWidgetConfigure.MOTION_WIDGET_USERNAME, mAppWidgetId);
-		String camera = MotionWidgetConfigure.loadPrefernece(context, MotionWidgetConfigure.MOTION_WIDGET_CAMERA, mAppWidgetId);
+		String cameraNumber = MotionWidgetConfigure.loadPrefernece(context, MotionWidgetConfigure.MOTION_WIDGET_CAMERA, mAppWidgetId);
 		
-		HttpClient client = getClient(username,password);
+		MotionCamera camera = new MotionCamera(externalUrlBase, internalUrlBase, cameraNumber, username, password);
 		
 		String msg = null;
 		if (intent.getAction().equals(ACTION_WIDGET_STATUS)) {
-			msg = getStatus(client, externalUrlBase, internalUrlBase, camera);
-		}			
-		if (intent.getAction().equals(ACTION_WIDGET_START)) {
-			msg = startDetection(client, externalUrlBase, internalUrlBase, camera);
-		}			
-		if (intent.getAction().equals(ACTION_WIDGET_PAUSE)) {
-			msg = pauseDetection(client, externalUrlBase, internalUrlBase, camera);
-		}			
-		if (intent.getAction().equals(ACTION_WIDGET_SNAPSHOT)) {
-			msg = snapshot(client, externalUrlBase, internalUrlBase, camera);
+			msg = camera.getStatus();
+		} else if (intent.getAction().equals(ACTION_WIDGET_START)) {
+			msg = camera.startDetection();
+		} else if (intent.getAction().equals(ACTION_WIDGET_PAUSE)) {
+			msg = camera.pauseDetection();
+		} else if (intent.getAction().equals(ACTION_WIDGET_SNAPSHOT)) {
+			msg = camera.snapshot();
 		}			
 		
 		if (msg != null) {
@@ -119,142 +88,5 @@ public class MotionWidget extends AppWidgetProvider {
 		}
 
 		super.onReceive(context, intent);
-	}
-
-	private String getStatus(HttpClient client, String externalUrlBase, String internalUrlBase, String camera) {
-		try {
-			try {
-				return makeStatusRequest(client, String.format(STATUS_URL, externalUrlBase,camera));
-			} catch (HttpHostConnectException e) {
-				return makeStatusRequest(client, String.format(STATUS_URL, internalUrlBase,camera));
-			}
-		} catch (Throwable t) {
-			return "Unable to connect to Motion";
-		}		
-	}
-
-	private String makeStatusRequest(HttpClient client, String statusUrl) throws IOException,
-			ClientProtocolException {
-		HttpUriRequest request = new HttpGet(statusUrl);
-		HttpResponse response = client.execute(request);
-		int status = response.getStatusLine().getStatusCode();
-		if (status == 200) {
-			return parseStatusResponse(response);
-		} else if (status == 401) {
-			return "Unauthorised to access Motion.";
-		} else {
-			return "Unable to connect to Motion";
-		}
-	}
-
-	private String parseStatusResponse(HttpResponse response) throws IOException {
-		BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-		String line = reader.readLine();
-		if (line.contains("PAUSE")) {
-			return "Motion Status: PAUSED";
-		} else if (line.contains("ACTIVE")) {
-			return "Motion Status: ACTIVE";				
-		} else {
-			return "Motion status UNKNOWN. Response Body: " + line;
-		}
-	}
-	
-	private String startDetection(HttpClient client, String externalUrlBase, String internalUrlBase, String camera) {
-		try {
-			try {
-				return makeStartRequest(client, String.format(START_URL, externalUrlBase, camera));
-			} catch (HttpHostConnectException e) {
-				return makeStartRequest(client, String.format(START_URL, internalUrlBase, camera));
-			}
-		} catch (Throwable t) {
-			return "Unable to connect to Motion";
-		}		
-	}
-
-
-	private String makeStartRequest(HttpClient client, String startUrl) throws IOException,
-			ClientProtocolException {
-		HttpUriRequest request = new HttpGet(startUrl);
-		HttpResponse response = client.execute(request);
-		int status = response.getStatusLine().getStatusCode();
-		if (status == 200) {
-			return "Motion Detection Started";
-		} else if (status == 401) {
-			return "Unauthorised to access Motion.";
-		} else {
-			return "Detection start failed. HTTP Status: " + status;
-		}
-	}
-
-	private String pauseDetection(HttpClient client, String externalUrlBase, String internalUrlBase, String camera) {
-		try {
-			try {
-				return makePauseRequest(client, String.format(PAUSE_URL, externalUrlBase, camera));
-			} catch (HttpHostConnectException e) {
-				return makePauseRequest(client, String.format(PAUSE_URL, internalUrlBase, camera));
-			}
-		} catch (Throwable t) {
-			return "Unable to connect to Motion";
-		}		
-	}
-
-	private String makePauseRequest(HttpClient client, String pauseUrl) throws IOException,
-			ClientProtocolException {
-		HttpUriRequest request = new HttpGet(pauseUrl);
-		HttpResponse response = client.execute(request);
-		int status = response.getStatusLine().getStatusCode();
-		if (status == 200) {
-			return "Motion Detection Paused";
-		} else if (status == 401) {
-			return "Unauthorised to access Motion.";
-		} else {
-			return "Detection pause failed. HTTP Status: " + status;
-		}
-	}
-
-	private String snapshot(HttpClient client, String externalUrlBase, String internalUrlBase, String camera) {
-		try {
-			try {
-				return makeSnapshotRequest(client, String.format(SNAPSHOT_URL, externalUrlBase, camera));
-			} catch (HttpHostConnectException e) {
-				return makeSnapshotRequest(client, String.format(SNAPSHOT_URL, internalUrlBase, camera));
-			}
-		} catch (Throwable t) {
-			return "Unable to connect to Motion";
-		}		
-	}
-
-	private String makeSnapshotRequest(HttpClient client, String pauseUrl) throws IOException,
-			ClientProtocolException {
-		HttpUriRequest request = new HttpGet(pauseUrl);
-		HttpResponse response = client.execute(request);
-		int status = response.getStatusLine().getStatusCode();
-		if (status == 200) {
-			return "Snapshot Taken";
-		} else if (status == 401) {
-			return "Unauthorised to access Motion.";
-		} else {
-			return "Snapshot failed. HTTP Status: " + status;
-		}
-	}
-
-	public DefaultHttpClient getClient(String username, String password) {
-        DefaultHttpClient ret = null;
-
-        HttpParams params = new BasicHttpParams();
-        HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
-        HttpProtocolParams.setContentCharset(params, "utf-8");
-        params.setBooleanParameter("http.protocol.expect-continue", false);
-
-        SchemeRegistry registry = new SchemeRegistry();
-        registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
-
-        ThreadSafeClientConnManager manager = new ThreadSafeClientConnManager(params, registry);
-        ret = new DefaultHttpClient(manager, params);
-		Credentials defaultcreds = new UsernamePasswordCredentials(username, password);
-		ret.getCredentialsProvider().setCredentials(
-				new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT, AuthScope.ANY_REALM), defaultcreds);
-        return ret;
-    }	
-	
+	}	
 }
