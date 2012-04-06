@@ -236,6 +236,114 @@
         <View
             android:layout_height="2dip"
             android:background="#FF909090" />
+        
+        <TableRow
+            android:id="@+id/tableRowGlyphiconsLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="10dip" >
+
+            <TextView
+                android:id="@+id/GlyphiconsLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dip"
+                android:text="Glyphicons" />
+            
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRowGlyphiconsHelp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/GlyphiconsHelp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingLeft="10dip"
+                android:paddingRight="10dip"
+                android:paddingBottom="10dip"
+                android:text="Icons gracioulsy provided by Glyphicons (http://www.glyphicons.com) under a Creative Commons Attribution 3.0 Unported (CC BY 3.0) license."
+                android:textSize="10sp" />
+        </TableRow>
+        
+        <View
+            android:layout_height="2dip"
+            android:background="#FF909090" />
+
+        <TableRow
+            android:id="@+id/tableRowApacheLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="10dip" >
+
+            <TextView
+                android:id="@+id/ApacheLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dip"
+                android:text="License Agreement" />
+            
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRowApacheHelp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/ApacheHelp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingLeft="10dip"
+                android:paddingRight="10dip"
+                android:paddingBottom="10dip"
+                android:text="Motion Widget is licensed under the Apache Licence, Version 2.0 : http://www.apache.org/licenses/LICENSE-2.0"
+                android:textSize="10sp" />
+        </TableRow>
+        
+        <View
+            android:layout_height="2dip"
+            android:background="#FF909090" />
+
+        <TableRow
+            android:id="@+id/tableRowGitHubLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="10dip" >
+
+            <TextView
+                android:id="@+id/GitHubLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dip"
+                android:text="github" />
+            
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRowApacheHelp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/ApacheHelp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingLeft="10dip"
+                android:paddingRight="10dip"
+                android:paddingBottom="10dip"
+                android:text="Motion Widget is open source. The source code is available on github here: http://github.com/malcyL/MotionWidget"
+                android:textSize="10sp" />
+        </TableRow>
+        
+        <View
+            android:layout_height="2dip"
+            android:background="#FF909090" />
 
         <TableRow
             android:id="@+id/tableRowButtons"
