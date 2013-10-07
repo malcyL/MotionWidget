@@ -1,5 +1,6 @@
 package uk.me.malcolmlandon.motion;
 
+import il.me.liranfunaro.motion.R;
 import android.app.Activity;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
@@ -84,5 +85,5 @@ public class MotionWidgetConfigure extends Activity {
     static String loadPrefernece(Context context, String key, int appWidgetId) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
         return prefs.getString(key + appWidgetId, "");
-    }	
+    }
 }
