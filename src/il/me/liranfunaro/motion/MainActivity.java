@@ -1,6 +1,7 @@
 package il.me.liranfunaro.motion;
 
 import android.app.Activity;
+import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -10,20 +11,33 @@ import android.widget.Button;
 import android.widget.ExpandableListView;
 
 public class MainActivity extends Activity {
+	public static int REQUEST_ADD_EDIT_HOST = 0x100;
+	
+	private HostListAdapter adapter;
+	private int myAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
+		Bundle extras = getIntent().getExtras();
+		if (extras != null) {
+			myAppWidgetId = extras.getInt(
+					AppWidgetManager.EXTRA_APPWIDGET_ID, 
+					AppWidgetManager.INVALID_APPWIDGET_ID);
+		}
+		
 		ExpandableListView hosts = (ExpandableListView) findViewById(R.id.hosts_list);
-		hosts.setAdapter(new HostListAdapter(this));
+		adapter = new HostListAdapter(this, myAppWidgetId);
+		hosts.setAdapter(adapter);
 		
 		final Button button = (Button) findViewById(R.id.add_host);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-            	Intent intent = new Intent(v.getContext(), AddHostActivity.class);
-            	//intent.putExtra("uuid", "");
-            	startActivityForResult(intent, 1);
+            	Intent intent = new Intent(v.getContext(), HostPreferencesActivity.class);
+            	startActivityForResult(intent, REQUEST_ADD_EDIT_HOST);
             }
         });
 	}
@@ -31,10 +45,8 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (resultCode == RESULT_OK) {
-			Intent refresh = new Intent(this, MainActivity.class);
-			startActivity(refresh);
-			this.finish();
+		if (requestCode == REQUEST_ADD_EDIT_HOST && resultCode == RESULT_OK) {
+			adapter.updateHosts(true);
 		}
 	}
 

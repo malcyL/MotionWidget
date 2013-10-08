@@ -4,5 +4,5 @@
    android:minHeight="40dip"
    android:updatePeriodMillis="3600000"
    android:initialLayout="@layout/widget"
-   android:configure="uk.me.malcolmlandon.motion.MotionWidgetConfigure" 
+   android:configure="il.me.liranfunaro.motion.MainActivity" 
 />

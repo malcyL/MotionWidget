@@ -1,10 +1,12 @@
 package il.me.liranfunaro.motion.client;
 
+import il.me.liranfunaro.motion.client.MotionHostClient.RequestSuccessCallback;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Scanner;
 
-public class MotionCameraClient extends MotionHostClient {
+public class MotionCameraClient {
 	
 	protected static final String STATUS_URL_TEMPLATE = "/%s/detection/status";
 	protected static final String START_URL_TEMPLATE = "/%s/detection/start";
@@ -12,15 +14,23 @@ public class MotionCameraClient extends MotionHostClient {
 	protected static final String SNAPSHOT_URL_TEMPLATE = "/%s/action/snapshot";
 	
 	protected final String camera;
+	protected final MotionHostClient hostClient;
 
-	public MotionCameraClient(String externalUrlBase, String internalUrlBase,
-			String username, String password, String camera) {
-		super(externalUrlBase, internalUrlBase, username, password);
+	public MotionCameraClient(Host host, int camera) {
+		this(host, Integer.toString(camera));
+	}
+	
+	public MotionCameraClient(Host host, String camera) {
+		this.hostClient = new MotionHostClient(host);
 		this.camera = camera;
 	}
 	
+	public MotionCameraClient(MotionHostClient host, int camera) {
+		this(host, Integer.toString(camera));
+	}
+	
 	public MotionCameraClient(MotionHostClient host, String camera) {
-		super(host);
+		this.hostClient = host;
 		this.camera = camera;
 	}
 	
@@ -32,12 +42,15 @@ public class MotionCameraClient extends MotionHostClient {
 		return String.format(template, camera);
 	}
 	
+	public HostStatus getHostStatus() {
+		return hostClient.getHostStatus();
+	}
+	
 	public CameraStatus getStatus() {
-		return makeCameraRequest(getRequestURL(STATUS_URL_TEMPLATE), new CameraSuccessCallback() {
+		return (CameraStatus) hostClient.makeRequest(getRequestURL(STATUS_URL_TEMPLATE), new RequestSuccessCallback() {
 			
 			@Override
-			public CameraStatus onSuccess(InputStream resultStream)
-					throws IOException {
+			public Object onSuccess(InputStream resultStream) throws IOException {
 				Scanner streamScanner = null;
 				try {
 					streamScanner = new Scanner(resultStream);
@@ -46,12 +59,10 @@ public class MotionCameraClient extends MotionHostClient {
 					if (result != null) {
 						try {
 							return CameraStatus.valueOf(result);
-						} catch (IllegalArgumentException e) {
-							return CameraStatus.UNAVALIBLE;
-						}
-					} else {
-						return CameraStatus.UNAVALIBLE;
+						} catch (IllegalArgumentException e) {}
 					}
+					
+					return CameraStatus.UNKNOWN;
 				} finally {
 					if(streamScanner != null) {
 						streamScanner.close();
@@ -62,7 +73,7 @@ public class MotionCameraClient extends MotionHostClient {
 	}
 
 	public CameraStatus startDetection() {
-		return makeCameraRequest(getRequestURL(START_URL_TEMPLATE), new CameraSuccessCallback() {
+		return (CameraStatus) hostClient.makeRequest(getRequestURL(START_URL_TEMPLATE), new RequestSuccessCallback() {
 			
 			@Override
 			public CameraStatus onSuccess(InputStream resultStream) throws IOException {
@@ -72,7 +83,7 @@ public class MotionCameraClient extends MotionHostClient {
 	}
 
 	public CameraStatus pauseDetection() {
-		return makeCameraRequest(getRequestURL(PAUSE_URL_TEMPLATE), new CameraSuccessCallback() {
+		return (CameraStatus) hostClient.makeRequest(getRequestURL(PAUSE_URL_TEMPLATE), new RequestSuccessCallback() {
 			
 			@Override
 			public CameraStatus onSuccess(InputStream resultStream) throws IOException {
@@ -82,7 +93,7 @@ public class MotionCameraClient extends MotionHostClient {
 	}
 
 	public CameraStatus snapshot() {
-		return makeCameraRequest(getRequestURL(SNAPSHOT_URL_TEMPLATE), new CameraSuccessCallback() {
+		return (CameraStatus) hostClient.makeRequest(getRequestURL(SNAPSHOT_URL_TEMPLATE), new RequestSuccessCallback() {
 			
 			@Override
 			public CameraStatus onSuccess(InputStream resultStream) throws IOException {

@@ -1,4 +1,5 @@
 package uk.me.malcolmlandon.motion;
+import il.me.liranfunaro.motion.HostPreferences;
 import il.me.liranfunaro.motion.R;
 import il.me.liranfunaro.motion.client.CameraStatus;
 import il.me.liranfunaro.motion.client.MotionCameraClient;
@@ -7,20 +8,24 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
-import android.os.Handler;
 import android.widget.RemoteViews;
-import android.widget.Toast;
 
 
 public class MotionWidget extends AppWidgetProvider {
+	public static final String PREFS_NAME = MotionWidget.class.toString();
+	
+	public static final String PREF_WIDGET_HOST_UUID = "UUID_OF_WIDGET_";
+	public static final String PREF_WIDGET_HOST_CAMERA = "CAMERA_OF_WIDGET_";
 
 	public static String ACTION_WIDGET_STATUS = "ActionWidgetStatus";
 	public static String ACTION_WIDGET_START = "ActionWidgetStart";
 	public static String ACTION_WIDGET_PAUSE = "ActionWidgetPause";
 	public static String ACTION_WIDGET_SNAPSHOT = "ActionWidgetSnapshot";
 	public static String STATUS_TEXT_FORMAT = "Camera #%s status: %s";
-
+	
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
 	  RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget);
@@ -61,19 +66,7 @@ public class MotionWidget extends AppWidgetProvider {
 		  remoteViews.setOnClickPendingIntent(R.id.button_pause, pausePendingIntent);
 		  remoteViews.setOnClickPendingIntent(R.id.button_snapshot, snapshotPendingIntent);
 		  
-		  final MotionCameraClient camera = getCameraClient(context, appWidgetId);
-		  
-		  new Thread(new Runnable() {
-				
-				@Override
-				public void run() {
-					final CameraStatus status = camera.getStatus();
-					if(status != null && status != CameraStatus.UNKNOWN) {
-						remoteViews.setTextViewText(R.id.status, getStatusText(camera, status));
-						appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
-					}
-				}
-			}).start();
+		  doAsyncAction(context, ACTION_WIDGET_STATUS, appWidgetId);
 
 		  appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
 	}
@@ -88,23 +81,76 @@ public class MotionWidget extends AppWidgetProvider {
 		return mAppWidgetId;
 	}
 	
-	public MotionCameraClient getCameraClient(Context context, int mAppWidgetId) {
-		String externalUrlBase = MotionWidgetConfigure.loadPrefernece(context, MotionWidgetConfigure.MOTION_WIDGET_EXTERNAL, mAppWidgetId);
-		String internalUrlBase = MotionWidgetConfigure.loadPrefernece(context, MotionWidgetConfigure.MOTION_WIDGET_INTERNAL, mAppWidgetId);
-		String password = MotionWidgetConfigure.loadPrefernece(context, MotionWidgetConfigure.MOTION_WIDGET_PASSWORD, mAppWidgetId);
-		String username = MotionWidgetConfigure.loadPrefernece(context, MotionWidgetConfigure.MOTION_WIDGET_USERNAME, mAppWidgetId);
-		String cameraNumber = MotionWidgetConfigure.loadPrefernece(context, MotionWidgetConfigure.MOTION_WIDGET_CAMERA, mAppWidgetId);
-		
-		return new MotionCameraClient(externalUrlBase, internalUrlBase, username, password, cameraNumber);
+	static SharedPreferences getSharedPreferences(Context context) {
+		return context.getSharedPreferences(PREFS_NAME, 0);
+	}
+	
+    static String getWidgetUUID(Context context, int appWidgetId) {
+        SharedPreferences prefs = getSharedPreferences(context);
+        return getWidgetUUID(prefs, appWidgetId);
+    }
+    
+    static String getWidgetUUID(SharedPreferences prefs, int appWidgetId) {
+        return prefs.getString(PREF_WIDGET_HOST_UUID + appWidgetId, "");
+    }
+    
+    static HostPreferences getWidgetHostPreferences(Context context, int appWidgetId) {
+    	String uuid = getWidgetUUID(context, appWidgetId);
+        return new HostPreferences(context, uuid);
+    }
+    
+    static HostPreferences getWidgetHostPreferences(Context context, SharedPreferences prefs, int appWidgetId) {
+    	String uuid = getWidgetUUID(prefs, appWidgetId);
+        return new HostPreferences(context, uuid);
+    }
+    
+    static String getWidgetCamera(Context context, int appWidgetId) {
+        SharedPreferences prefs = getSharedPreferences(context);
+        return getWidgetCamera(prefs, appWidgetId);
+    }
+    
+    static String getWidgetCamera(SharedPreferences prefs, int appWidgetId) {
+        return prefs.getString(PREF_WIDGET_HOST_CAMERA + appWidgetId, "");
+    }
+    
+    public static void setWidgetPreferences(Context context, int appWidgetId, String hostUUID, String camera) {
+    	SharedPreferences prefs = getSharedPreferences(context);
+    	setWidgetPreferences(prefs, appWidgetId, hostUUID, camera);
+    }
+    
+    public static void setWidgetPreferences(SharedPreferences prefs, int appWidgetId, String hostUUID, String camera) {
+    	Editor edit = prefs.edit();
+    	setWidgetPreferences(edit, appWidgetId, hostUUID, camera);
+    	edit.commit();
+    }
+    
+    public static void setWidgetPreferences(Editor edit, int appWidgetId, String hostUUID, String camera) {
+    	edit.putString(PREF_WIDGET_HOST_UUID + appWidgetId, hostUUID);
+    	edit.putString(PREF_WIDGET_HOST_CAMERA + appWidgetId, camera);
+    }
+	
+	public MotionCameraClient getWidgetCameraClient(Context context, int appWidgetId) {
+		SharedPreferences prefs = getSharedPreferences(context);
+		HostPreferences host = getWidgetHostPreferences(context, prefs, appWidgetId);
+		String camera = getWidgetCamera(prefs, appWidgetId);
+		return new MotionCameraClient(host, camera);
 	}
 	
 	@Override
 	public void onReceive(final Context context, final Intent intent) {
 		final int appWidgetId = getAppWidgerId(intent.getExtras());
 
-		final MotionCameraClient camera = getCameraClient(context, appWidgetId);
+		
 		final String action = intent.getAction();
-		final Handler toastHandler = new Handler();
+		
+		doAsyncAction(context, action, appWidgetId);
+
+		super.onReceive(context, intent);
+	}
+	
+	public void doAsyncAction(final Context context,
+			final String action, final int appWidgetId) {
+		final MotionCameraClient camera = getWidgetCameraClient(context, appWidgetId);
 		
 		new Thread(new Runnable() {
 			
@@ -119,19 +165,8 @@ public class MotionWidget extends AppWidgetProvider {
 
 					mgr.updateAppWidget(appWidgetId, rv);
 				}
-				
-				if (status != null) {
-					toastHandler.post(new Runnable() {
-						@Override
-						public void run() {
-							Toast.makeText(context, status.getUserMessage(), Toast.LENGTH_SHORT).show();
-						}
-					});
-				}
 			}
 		}).start();
-
-		super.onReceive(context, intent);
 	}
 	
 	public CameraStatus doAction(MotionCameraClient camera, String action) {

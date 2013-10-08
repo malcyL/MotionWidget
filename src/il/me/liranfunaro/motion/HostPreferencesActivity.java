@@ -15,7 +15,88 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class AddHostActivity extends Activity {
+public class HostPreferencesActivity extends Activity {
+	private String uuid = null;
+	
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_add_host);
+		// Show the Up button in the action bar.
+		setupActionBar();
+		
+		uuid = getIntent().getStringExtra("uuid");
+		
+		if(uuid != null && !uuid.isEmpty()) {
+			HostPreferences host = new HostPreferences(this, uuid);
+			host.fillActivity(this);
+		}
+		
+		EditText externalUri = (EditText) findViewById(R.id.hostExternalUrl);
+		EditText internalUri = (EditText) findViewById(R.id.hostInternalUrl);
+		
+		externalUri.setOnFocusChangeListener (new UriInputNormalizer(true));
+		internalUri.setOnFocusChangeListener (new UriInputNormalizer(false));
+		
+		Button cancel = (Button) findViewById(R.id.cancelbutton);
+		cancel.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				setResult(RESULT_CANCELED);
+				finish();
+			}
+		});
+		
+		Button ok = (Button) findViewById(R.id.okbutton);
+		ok.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				try {
+					HostPreferences host = new HostPreferences(HostPreferencesActivity.this, uuid);
+					host.fillFromActivity(HostPreferencesActivity.this);
+					host.commit();
+					setResult(RESULT_OK);
+					finish();
+				} catch (IllegalArgumentException e) {
+					Toast.makeText(v.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+				}
+			}
+		});
+	}
+	
+	/**
+	 * Set up the {@link android.app.ActionBar}.
+	 */
+	private void setupActionBar() {
+
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.add_host, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			// This ID represents the Home or Up button. In the case of this
+			// activity, the Up button is shown. Use NavUtils to allow users
+			// to navigate up one level in the application structure. For
+			// more details, see the Navigation pattern on Android Design:
+			//
+			// http://developer.android.com/design/patterns/navigation.html#up-vs-back
+			//
+			NavUtils.navigateUpFromSameTask(this);
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
 	class UriInputNormalizer implements TextView.OnFocusChangeListener {
 		private final boolean isMendatory;
 		
@@ -54,82 +135,4 @@ public class AddHostActivity extends Activity {
 			}
 		}
 	}
-
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_add_host);
-		// Show the Up button in the action bar.
-		setupActionBar();
-		
-		EditText externalUri = (EditText) findViewById(R.id.hostExternalUrl);
-		EditText internalUri = (EditText) findViewById(R.id.hostInternalUrl);
-		
-		externalUri.setOnFocusChangeListener (new UriInputNormalizer(true));
-		internalUri.setOnFocusChangeListener (new UriInputNormalizer(false));
-		
-		String uuid = getIntent().getStringExtra("uuid");
-		
-		Button cancel = (Button) findViewById(R.id.cancelbutton);
-		cancel.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-				setResult(RESULT_CANCELED);
-				finish();
-			}
-		});
-		
-		Button ok = (Button) findViewById(R.id.okbutton);
-		ok.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				try {
-					HostPreferences host = new HostPreferences(AddHostActivity.this);
-					host.commit();
-					setResult(RESULT_OK);
-					finish();
-				} catch (IllegalArgumentException e) {
-					Toast.makeText(v.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-				}
-			}
-		});
-	}
-	
-	public String getEditText(int id) {
-		return ((EditText)findViewById(id)).getText().toString();
-	}
-	
-	/**
-	 * Set up the {@link android.app.ActionBar}.
-	 */
-	private void setupActionBar() {
-
-		getActionBar().setDisplayHomeAsUpEnabled(true);
-
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.add_host, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			// This ID represents the Home or Up button. In the case of this
-			// activity, the Up button is shown. Use NavUtils to allow users
-			// to navigate up one level in the application structure. For
-			// more details, see the Navigation pattern on Android Design:
-			//
-			// http://developer.android.com/design/patterns/navigation.html#up-vs-back
-			//
-			NavUtils.navigateUpFromSameTask(this);
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
-
 }

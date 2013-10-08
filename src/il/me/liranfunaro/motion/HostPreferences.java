@@ -1,13 +1,8 @@
 package il.me.liranfunaro.motion;
 
-import il.me.liranfunaro.motion.R;
-import il.me.liranfunaro.motion.client.CameraStatus;
 import il.me.liranfunaro.motion.client.Host;
-import il.me.liranfunaro.motion.client.MotionCameraClient;
-import il.me.liranfunaro.motion.client.MotionHostClient;
 
 import java.net.MalformedURLException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Set;
 import java.util.TreeSet;
@@ -18,6 +13,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
+import android.text.Editable;
 import android.widget.EditText;
 
 
@@ -40,47 +36,45 @@ public class HostPreferences implements Host, Comparable<HostPreferences> {
 	private String username;
 	private String password;
 	
-	private ArrayList<MotionCameraClient> cameras = null;
+	public HostPreferences(Context context) {
+		this(context, null);
+	}
 	
 	public HostPreferences(Context context, String uuid) {
-		if(uuid == null || context == null) {
+		if(context == null) {
 			throw new IllegalArgumentException("context and uuid must not be null");
 		}
 		
 		this.context = context;
-		this.uuid = UUID.fromString(uuid);
-		
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-		
-		this.hostName = prefs.getString(PREF_PREFIX_MOTION_WIDGET_HOSTNAME + uuid, "New Host");
-		
-		this.externalUrl = prefs.getString(PREF_PREFIX_MOTION_WIDGET_EXTERNAL + uuid, "");
-		this.internalUrl = prefs.getString(PREF_PREFIX_MOTION_WIDGET_INTERNAL + uuid, "");
-		
-		this.username = prefs.getString(PREF_PREFIX_MOTION_WIDGET_USERNAME + uuid, "");
-		this.password = prefs.getString(PREF_PREFIX_MOTION_WIDGET_PASSWORD + uuid, "");
-	}
-	
-	public HostPreferences(Activity activity) throws IllegalArgumentException {
-		this(activity, null);
-	}
-	
-	public HostPreferences(Activity activity, String uuid) throws IllegalArgumentException {
-		if(activity == null) {
-			throw new IllegalArgumentException("activity not be null");
-		}
-		
-		this.context = activity.getBaseContext();
-		if(uuid != null) {
+		if(uuid != null && !uuid.isEmpty()) {
 			this.uuid = UUID.fromString(uuid);
+			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+			
+			this.hostName = prefs.getString(PREF_PREFIX_MOTION_WIDGET_HOSTNAME + uuid, "New Host");
+			
+			this.externalUrl = prefs.getString(PREF_PREFIX_MOTION_WIDGET_EXTERNAL + uuid, "");
+			this.internalUrl = prefs.getString(PREF_PREFIX_MOTION_WIDGET_INTERNAL + uuid, "");
+			
+			this.username = prefs.getString(PREF_PREFIX_MOTION_WIDGET_USERNAME + uuid, "");
+			this.password = prefs.getString(PREF_PREFIX_MOTION_WIDGET_PASSWORD + uuid, "");
 		} else {
 			this.uuid = null;
 		}
+	}
+	
+	public void fillActivity(Activity activity) {
+		setText(activity, R.id.hostname, this.hostName);
+		setText(activity, R.id.hostExternalUrl, this.externalUrl);
+		setText(activity, R.id.hostInternalUrl, this.internalUrl);
+		setText(activity, R.id.hostUsername, this.username);
+		setText(activity, R.id.hostPassword, this.password);
+	}
+	
+	public void fillFromActivity(Activity activity) {
+		this.hostName = getText(activity, R.id.hostname);
 		
-		this.hostName = getEditText(activity, R.id.hostname);
-		
-		String externalUrlBase = getEditText(activity, R.id.hostExternalUrl);
-		String internalUrlBase = getEditText(activity, R.id.hostInternalUrl);
+		String externalUrlBase = getText(activity, R.id.hostExternalUrl);
+		String internalUrlBase = getText(activity, R.id.hostInternalUrl);
 		
 		if(externalUrlBase == null || externalUrlBase.isEmpty()) {
 			throw new IllegalArgumentException("Must supply host url");
@@ -102,11 +96,8 @@ public class HostPreferences implements Host, Comparable<HostPreferences> {
 			hostName = externalUrl;
 		}
 		
-		username = getEditText(activity, R.id.hostUsername);
-		password = getEditText(activity, R.id.hostPassword);
-	}
-	
-	public void fillFromActivity(Activity activity) {
+		this.username = getText(activity, R.id.hostUsername);
+		this.password = getText(activity, R.id.hostPassword);
 	}
 	
 	public UUID getUUID() {
@@ -163,6 +154,12 @@ public class HostPreferences implements Host, Comparable<HostPreferences> {
 		return uuid;
 	}
 	
+	private static void removeHostFromList(SharedPreferences prefs, Editor edit, String uuid) {
+		Set<String> hosts = getHostsList(prefs);
+		hosts.remove(uuid.toString());
+		setHostList(edit, hosts);
+	}
+	
 	public void commit() {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		Editor edit = prefs.edit();
@@ -176,29 +173,41 @@ public class HostPreferences implements Host, Comparable<HostPreferences> {
 		edit.putString(PREF_PREFIX_MOTION_WIDGET_INTERNAL + uuid, internalUrl);
 		edit.putString(PREF_PREFIX_MOTION_WIDGET_USERNAME + uuid, username);
 		edit.putString(PREF_PREFIX_MOTION_WIDGET_PASSWORD + uuid, password);
+		
 		edit.commit();
 	}
 	
-	public ArrayList<MotionCameraClient> getCameraClients() {
-		return cameras;
-	}
-	
-	public boolean updateCameras() {
-		ArrayList<MotionCameraClient> cameras = new ArrayList<MotionCameraClient>();
-		CameraStatus result = new MotionHostClient(this).getCameras(cameras);
-		
-		switch (result) {
-		case UNAUTHORIZED:
-		case UNAVALIBLE:
-			return false;
-		default:
-			this.cameras = cameras;
-			return true;
+	public void remove() {
+		if(uuid == null) {
+			return;
 		}
+		
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		Editor edit = prefs.edit();
+		
+		removeHostFromList(prefs, edit, uuid.toString());
+		
+		edit.remove(PREF_PREFIX_MOTION_WIDGET_HOSTNAME + uuid);
+		edit.remove(PREF_PREFIX_MOTION_WIDGET_EXTERNAL + uuid);
+		edit.remove(PREF_PREFIX_MOTION_WIDGET_INTERNAL + uuid);
+		edit.remove(PREF_PREFIX_MOTION_WIDGET_USERNAME + uuid);
+		edit.remove(PREF_PREFIX_MOTION_WIDGET_PASSWORD + uuid);
+		
+		edit.commit();
 	}
 	
-	private String getEditText(Activity activity, int id) {
-		return ((EditText)activity.findViewById(id)).getText().toString();
+	private static void setText(Activity activity, int id, String text) {
+		Editable edit = getEditableText(activity, id);
+		edit.clear();
+		edit.append(text);
+	}
+	
+	private static String getText(Activity activity, int id) {
+		return getEditableText(activity, id).toString();
+	}
+	
+	private static Editable getEditableText(Activity activity, int id) {
+		return ((EditText)activity.findViewById(id)).getText();
 	}
 	
 	@Override

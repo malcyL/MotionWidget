@@ -4,7 +4,7 @@
     android:layout_height="fill_parent"
     android:orientation="horizontal"
     android:descendantFocusability="blocksDescendants"
-    android:padding="10dp" >
+    android:paddingLeft="25dp" >
 
     <LinearLayout
         android:id="@+id/hostInfoLyout"
@@ -12,8 +12,9 @@
         android:layout_height="fill_parent"
         android:layout_alignParentLeft="true"
         android:layout_toLeftOf="@+id/editHost"
+        android:gravity="center_vertical"
         android:orientation="vertical"
-        android:paddingLeft="25dp" >
+        android:padding="10dp" >
 
         <TextView
             android:id="@+id/hostName"
@@ -39,6 +40,7 @@
     </LinearLayout>
 
     <View
+        android:id="@+id/editDivider"
         android:layout_width="2dp"
         android:layout_height="match_parent"
         android:layout_alignLeft="@+id/editHost"
@@ -53,7 +55,7 @@
         android:layout_alignTop="@+id/hostInfoLyout"
         android:background="?android:attr/selectableItemBackground"
         android:contentDescription="@string/edit_host_description"
-        android:padding="15dp"
+        android:padding="25dp"
         android:focusableInTouchMode="false"
 		android:clickable="true"
         android:src="@android:drawable/ic_menu_edit" />

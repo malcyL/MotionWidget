@@ -7,6 +7,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 
@@ -18,6 +19,9 @@ public class MotionHostClient {
 	protected final String externalUrlBase;
 	protected final String internalUrlBase;
 	protected final String authString;
+	
+	protected HostStatus hostStatus = HostStatus.UNKNOWN;
+	protected ArrayList<String> availibleCameras;
 	
 	public MotionHostClient(Host host) {
 		this(host.getExternalHost(),host.getInternalHost(),host.getUsername(),host.getPassword());
@@ -41,9 +45,12 @@ public class MotionHostClient {
 		this.authString = host.authString;
 	}
 	
+	public HostStatus getHostStatus() {
+		return hostStatus;
+	}
 	
-	protected interface CameraSuccessCallback {
-		CameraStatus onSuccess(InputStream resultStream) throws IOException;
+	public interface RequestSuccessCallback {
+		Object onSuccess(InputStream resultStream) throws IOException;
 	}
 	
 	private HttpURLConnection getUrlConnection(String requestURL) throws IOException {
@@ -56,61 +63,112 @@ public class MotionHostClient {
 		return urlConnection;
 	}
 	
-	protected CameraStatus makeSimpleCameraRequest(String reqURL, CameraSuccessCallback action) throws IOException {
+	protected HostStatus getHostStatus(int statusCode) {
+		switch(statusCode) {
+		case 200:
+			return HostStatus.AVAILIBLE;
+		case 401:
+			return HostStatus.UNAUTHORIZED;
+		default:
+			return HostStatus.UNAVALIBLE;
+		}
+	}
+	
+	protected void setHostStatus(int statusCode) {
+		this.hostStatus = getHostStatus(statusCode);
+	}
+	
+	protected synchronized Object makeSimpleRequest(String reqURL, RequestSuccessCallback action) throws IOException {
 		HttpURLConnection conn = getUrlConnection(reqURL);
 		try {
 			conn.connect();
-			switch(conn.getResponseCode()) {
-			case 200:
+			setHostStatus(conn.getResponseCode());
+			switch(hostStatus) {
+			case AVAILIBLE:
 				return action.onSuccess(conn.getInputStream());
-			case 401:
-				return CameraStatus.UNAUTHORIZED;
 			default:
-				throw new IOException("Server Unavailable");
+				return null;
 			}
 		} finally {
+			if(hostStatus.equals(HostStatus.UNKNOWN)) {
+				hostStatus = HostStatus.UNAVALIBLE;
+			}
 			conn.disconnect();
 		}
 	}
 	
-	protected CameraStatus makeCameraRequest(String actionUrl, CameraSuccessCallback action) {
+	protected synchronized Object makeRequest(String actionUrl, RequestSuccessCallback action) {
 		try {
 			try {
-				return makeSimpleCameraRequest(externalUrlBase + actionUrl, action);
+				return makeSimpleRequest(externalUrlBase + actionUrl, action);
 			} catch (IOException e) {
-				return makeSimpleCameraRequest(internalUrlBase + actionUrl, action);
+				if(internalUrlBase != null && !internalUrlBase.isEmpty()) {
+					return makeSimpleRequest(internalUrlBase + actionUrl, action);
+				}
 			}
-		} catch (IOException e) {
-			return CameraStatus.UNAVALIBLE;
-		}
+		} catch (IOException e) {}
+		
+		return null;
 	}
 	
 	public MotionCameraClient getCamera(String camera) {
 		return new MotionCameraClient(this, camera);
 	}
 	
-	public CameraStatus getCameras(final ArrayList<MotionCameraClient> cameras) {
+	public MotionCameraClient getCamera(int camera) {
+		return new MotionCameraClient(this, camera);
+	}
+	
+	AtomicBoolean isFetching = new AtomicBoolean(false);
+	
+	public boolean fetchAvailibleCamerasAsync(final Runnable callback) {
+		boolean success = isFetching.compareAndSet(false, true);
+		if(!success) {
+			return false;
+		}
 		
-		return makeCameraRequest("", new CameraSuccessCallback() {
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				fetchAvailibleCameras();
+				isFetching.set(false);
+				callback.run();
+			}
+		}).start();
+		
+		return true;
+	}
+	
+	public void fetchAvailibleCameras() {
+		makeRequest("", new RequestSuccessCallback() {
 			
 			@Override
 			public CameraStatus onSuccess(InputStream resultStream) throws IOException {
 				Scanner streamScanner = null;
 				try {
 					streamScanner = new Scanner(resultStream);
+					
+					final ArrayList<String> newCameras = new ArrayList<String>();
+					
 					while(streamScanner.findWithinHorizon(cameraLinkPattern, 0) != null) {
 						MatchResult match = streamScanner.match();
-						cameras.add(getCamera(match.group(3)));
+						newCameras.add(match.group(3));
 					}
 	
+					availibleCameras = newCameras;
 				} finally {
 					if(streamScanner != null) {
 						streamScanner.close();
 					}
 				}
 				
-				return CameraStatus.UNKNOWN;
+				return null;
 			}
 		});
+	}
+	
+	public ArrayList<String> getAvalibleCameras() {
+		return availibleCameras;
 	}
 }

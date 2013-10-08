@@ -47,8 +47,7 @@
         </activity>
         <activity
             android:name="il.me.liranfunaro.motion.MainActivity"
-            android:label="@string/title_activity_main"
-            android:launchMode="singleInstance" >
+            android:label="@string/title_activity_main" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -56,7 +55,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="il.me.liranfunaro.motion.AddHostActivity"
+            android:name="il.me.liranfunaro.motion.HostPreferencesActivity"
             android:label="@string/title_activity_add_host"
             android:parentActivityName="il.me.liranfunaro.motion.MainActivity" >
             <meta-data
