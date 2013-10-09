@@ -16,7 +16,6 @@ public class MainActivity extends Activity {
 	private HostListAdapter adapter;
 	private int myAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
 	
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

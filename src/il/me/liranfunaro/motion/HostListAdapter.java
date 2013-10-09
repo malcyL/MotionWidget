@@ -37,6 +37,10 @@ public class HostListAdapter extends BaseExpandableListAdapter {
 		updateHosts(false);
 	}
 	
+	public void updateHosts() {
+		updateHosts(true);
+	}
+	
 	public void updateHosts(boolean notify) {
 		Set<HostPreferences> hostsSet = new TreeSet<HostPreferences>();
 		

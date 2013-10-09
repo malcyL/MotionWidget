@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="background_wrong_uri">#AA900000</color>
+    <color name="btn_background_off">#40FF0000</color>
+    <color name="btn_background_on">#4000FF00</color>
 </resources>

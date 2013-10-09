@@ -46,6 +46,10 @@ public class MotionCameraClient {
 		return hostClient.getHostStatus();
 	}
 	
+	public MotionHostClient getHost() {
+		return hostClient;
+	}
+	
 	public CameraStatus getStatus() {
 		return (CameraStatus) hostClient.makeRequest(getRequestURL(STATUS_URL_TEMPLATE), new RequestSuccessCallback() {
 			

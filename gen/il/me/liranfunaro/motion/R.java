@@ -18,6 +18,8 @@ public final class R {
     }
     public static final class color {
         public static final int background_wrong_uri=0x7f050000;
+        public static final int btn_background_off=0x7f050001;
+        public static final int btn_background_on=0x7f050002;
     }
     public static final class dimen {
         /**  Default screen margins, per the Android Design guidelines. 
@@ -30,97 +32,49 @@ public final class R {
         public static final int activity_vertical_margin=0x7f060001;
     }
     public static final class drawable {
-        public static final int icon=0x7f020000;
-        public static final int pause=0x7f020001;
-        public static final int pause_pressed=0x7f020002;
-        public static final int pause_selector=0x7f020003;
-        public static final int snapshot=0x7f020004;
-        public static final int snapshot_pressed=0x7f020005;
-        public static final int snapshot_selector=0x7f020006;
-        public static final int start=0x7f020007;
-        public static final int start_pressed=0x7f020008;
-        public static final int start_selector=0x7f020009;
-        public static final int status=0x7f02000a;
-        public static final int status_pressed=0x7f02000b;
-        public static final int status_selector=0x7f02000c;
-        public static final int toolbar=0x7f02000d;
-        public static final int widget_bg=0x7f02000e;
-        public static final int widget_bg_normal=0x7f02000f;
-        public static final int widget_frame_portrait=0x7f020010;
+        public static final int button_pause_on=0x7f020000;
+        public static final int button_play_on=0x7f020001;
+        public static final int button_regular=0x7f020002;
+        public static final int ic_action_camera=0x7f020003;
+        public static final int ic_action_pause=0x7f020004;
+        public static final int ic_action_play=0x7f020005;
+        public static final int ic_action_refresh=0x7f020006;
+        public static final int icon=0x7f020007;
+        public static final int widget_bg=0x7f020008;
     }
     public static final class id {
-        public static final int ApacheHelp=0x7f0a002d;
-        public static final int ApacheLabel=0x7f0a002b;
-        public static final int CameraHelp=0x7f0a001f;
-        public static final int CameraLabel=0x7f0a001b;
-        public static final int CameraText=0x7f0a001d;
-        public static final int ExternalHelp=0x7f0a0013;
-        public static final int ExternalLabel=0x7f0a000f;
-        public static final int ExternalText=0x7f0a0011;
-        public static final int GitHubLabel=0x7f0a002f;
-        public static final int InternalHelp=0x7f0a0019;
-        public static final int InternalLabel=0x7f0a0015;
-        public static final int InternalText=0x7f0a0017;
-        public static final int OpenSourceHelp=0x7f0a0031;
-        public static final int PasswordLabel=0x7f0a0025;
-        public static final int PasswordText=0x7f0a0027;
-        public static final int Title=0x7f0a000d;
-        public static final int UsernameLabel=0x7f0a0021;
-        public static final int UsernameText=0x7f0a0023;
-        public static final int action_about=0x7f0a003e;
-        public static final int action_settings=0x7f0a003d;
+        public static final int action_about=0x7f0a0018;
+        public static final int action_settings=0x7f0a0017;
         public static final int add_host=0x7f0a0007;
-        public static final int button_pause=0x7f0a003a;
-        public static final int button_snapshot=0x7f0a003b;
-        public static final int button_start=0x7f0a0039;
-        public static final int button_status=0x7f0a0038;
+        public static final int button_pause=0x7f0a0015;
+        public static final int button_snapshot=0x7f0a0016;
+        public static final int button_start=0x7f0a0014;
+        public static final int button_status=0x7f0a0013;
+        public static final int cameraImage=0x7f0a0010;
         public static final int cameraNumber=0x7f0a000a;
         public static final int cancelbutton=0x7f0a0005;
-        public static final int editDivider=0x7f0a0037;
-        public static final int editHost=0x7f0a0034;
+        public static final int editDivider=0x7f0a000f;
+        public static final int editHost=0x7f0a000c;
         public static final int hostExternalUrl=0x7f0a0001;
-        public static final int hostInfoLyout=0x7f0a0033;
+        public static final int hostInfoLyout=0x7f0a000b;
         public static final int hostInternalUrl=0x7f0a0002;
-        public static final int hostName=0x7f0a0035;
+        public static final int hostName=0x7f0a000d;
         public static final int hostPassword=0x7f0a0004;
-        public static final int hostUrl=0x7f0a0036;
+        public static final int hostUrl=0x7f0a000e;
         public static final int hostUsername=0x7f0a0003;
         public static final int hostname=0x7f0a0000;
         public static final int hosts_list=0x7f0a0008;
+        public static final int lastUpdate=0x7f0a0011;
         public static final int okbutton=0x7f0a0006;
         public static final int refreshCamera=0x7f0a0009;
-        public static final int status=0x7f0a003c;
-        public static final int tableLayout1=0x7f0a000b;
-        public static final int tableRowApacheHelp=0x7f0a002c;
-        public static final int tableRowApacheLabel=0x7f0a002a;
-        public static final int tableRowButtons=0x7f0a0032;
-        public static final int tableRowCameraHelp=0x7f0a001e;
-        public static final int tableRowCameraLabel=0x7f0a001a;
-        public static final int tableRowCameraText=0x7f0a001c;
-        public static final int tableRowExternalHelp=0x7f0a0012;
-        public static final int tableRowExternalLabel=0x7f0a000e;
-        public static final int tableRowExternalText=0x7f0a0010;
-        public static final int tableRowGitHubLabel=0x7f0a002e;
-        public static final int tableRowGlyphiconsHelp=0x7f0a0029;
-        public static final int tableRowGlyphiconsLabel=0x7f0a0028;
-        public static final int tableRowInternalHelp=0x7f0a0018;
-        public static final int tableRowInternalLabel=0x7f0a0014;
-        public static final int tableRowInternalText=0x7f0a0016;
-        public static final int tableRowOpenSourceHelp=0x7f0a0030;
-        public static final int tableRowPasswordLabel=0x7f0a0024;
-        public static final int tableRowPasswordText=0x7f0a0026;
-        public static final int tableRowTitle=0x7f0a000c;
-        public static final int tableRowUsernameLabel=0x7f0a0020;
-        public static final int tableRowUsernameText=0x7f0a0022;
+        public static final int status=0x7f0a0012;
     }
     public static final class layout {
         public static final int activity_add_host=0x7f030000;
         public static final int activity_main=0x7f030001;
         public static final int camera=0x7f030002;
-        public static final int configuration=0x7f030003;
-        public static final int host=0x7f030004;
-        public static final int main=0x7f030005;
-        public static final int widget=0x7f030006;
+        public static final int host=0x7f030003;
+        public static final int widget=0x7f030004;
     }
     public static final class menu {
         public static final int add_host=0x7f090000;
@@ -143,37 +97,38 @@ public final class R {
         public static final int host_name=0x7f070018;
         public static final int lincece=0x7f07000a;
         public static final int lincece_ref=0x7f07000b;
+        public static final int not_synced=0x7f07001b;
         public static final int open_source_ref=0x7f070009;
         public static final int open_source_title=0x7f070008;
         public static final int password_title=0x7f070014;
         public static final int pause=0x7f070006;
-        public static final int pref_default_display_name=0x7f070020;
-        public static final int pref_description_social_recommendations=0x7f07001e;
+        public static final int pref_default_display_name=0x7f070021;
+        public static final int pref_description_social_recommendations=0x7f07001f;
         /**  Example settings for Data & Sync 
          */
-        public static final int pref_header_data_sync=0x7f070022;
+        public static final int pref_header_data_sync=0x7f070023;
         /**  Strings related to Settings 
  Example General settings 
          */
-        public static final int pref_header_general=0x7f07001c;
+        public static final int pref_header_general=0x7f07001d;
         /**  Example settings for Notifications 
          */
-        public static final int pref_header_notifications=0x7f070025;
-        public static final int pref_ringtone_silent=0x7f070028;
-        public static final int pref_title_add_friends_to_messages=0x7f070021;
-        public static final int pref_title_display_name=0x7f07001f;
-        public static final int pref_title_new_message_notifications=0x7f070026;
-        public static final int pref_title_ringtone=0x7f070027;
-        public static final int pref_title_social_recommendations=0x7f07001d;
-        public static final int pref_title_sync_frequency=0x7f070023;
-        public static final int pref_title_system_sync_settings=0x7f070024;
-        public static final int pref_title_vibrate=0x7f070029;
+        public static final int pref_header_notifications=0x7f070026;
+        public static final int pref_ringtone_silent=0x7f070029;
+        public static final int pref_title_add_friends_to_messages=0x7f070022;
+        public static final int pref_title_display_name=0x7f070020;
+        public static final int pref_title_new_message_notifications=0x7f070027;
+        public static final int pref_title_ringtone=0x7f070028;
+        public static final int pref_title_social_recommendations=0x7f07001e;
+        public static final int pref_title_sync_frequency=0x7f070024;
+        public static final int pref_title_system_sync_settings=0x7f070025;
+        public static final int pref_title_vibrate=0x7f07002a;
         public static final int snapshot=0x7f070007;
         public static final int start=0x7f070005;
         public static final int status=0x7f070004;
         public static final int title_activity_add_host=0x7f070019;
         public static final int title_activity_main=0x7f070015;
-        public static final int title_activity_settings=0x7f07001b;
+        public static final int title_activity_settings=0x7f07001c;
         public static final int username_title=0x7f070013;
         public static final int widget_conf_title=0x7f07000c;
     }

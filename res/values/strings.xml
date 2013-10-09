@@ -32,5 +32,7 @@
     <string name="host_name">Host Name</string>
     <string name="title_activity_add_host">AddHostActivity</string>
     <string name="edit_host_description">Edit the host properties</string>
+    
+    <string name="not_synced">not synced</string>
 
 </resources>

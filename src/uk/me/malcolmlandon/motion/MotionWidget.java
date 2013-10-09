@@ -3,6 +3,9 @@ import il.me.liranfunaro.motion.HostPreferences;
 import il.me.liranfunaro.motion.R;
 import il.me.liranfunaro.motion.client.CameraStatus;
 import il.me.liranfunaro.motion.client.MotionCameraClient;
+
+import java.util.Calendar;
+
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -11,6 +14,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.widget.RemoteViews;
 
 
@@ -24,7 +28,7 @@ public class MotionWidget extends AppWidgetProvider {
 	public static String ACTION_WIDGET_START = "ActionWidgetStart";
 	public static String ACTION_WIDGET_PAUSE = "ActionWidgetPause";
 	public static String ACTION_WIDGET_SNAPSHOT = "ActionWidgetSnapshot";
-	public static String STATUS_TEXT_FORMAT = "Camera #%s status: %s";
+	public static String STATUS_TEXT_FORMAT = "%s #%s: %s";
 	
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -35,8 +39,8 @@ public class MotionWidget extends AppWidgetProvider {
 	  }
 	}
 	
-	public String getStatusText(MotionCameraClient camera, CameraStatus status) {
-		return String.format(STATUS_TEXT_FORMAT, camera.getCameraNumber(), status.toString());
+	public String getStatusText(HostPreferences host, MotionCameraClient camera, CameraStatus status) {
+		return String.format(STATUS_TEXT_FORMAT, host.getName(), camera.getCameraNumber(), status.toString());
 	}
 	
 	public void onUpdateWidget(final Context context, final AppWidgetManager appWidgetManager, final int appWidgetId, final RemoteViews remoteViews) {
@@ -159,9 +163,19 @@ public class MotionWidget extends AppWidgetProvider {
 				final CameraStatus status = doAction(camera, action);
 				if(status != null && status != CameraStatus.UNKNOWN) {
 					AppWidgetManager mgr = AppWidgetManager.getInstance(context);
-
+					
 					RemoteViews rv = new RemoteViews(context.getPackageName(),R.layout.widget);
-					rv.setTextViewText(R.id.status, getStatusText(camera, status));
+					switch(status) {
+					case ACTIVE:
+						break;
+					case PAUSE:
+						break;
+					default:
+					}
+					
+					rv.setTextViewText(R.id.status, getStatusText(getWidgetHostPreferences(context, appWidgetId), camera, status));
+					String time = DateFormat.getTimeFormat(context).format(Calendar.getInstance().getTime());
+					rv.setTextViewText(R.id.lastUpdate, "last update: " + time);
 
 					mgr.updateAppWidget(appWidgetId, rv);
 				}
