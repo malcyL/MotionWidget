@@ -1,6 +1,8 @@
 package il.me.liranfunaro.motion.client;
 
 
+import il.me.liranfunaro.motion.GeneralPreferences;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -23,12 +25,14 @@ public class MotionHostClient {
 	protected HostStatus hostStatus = HostStatus.UNKNOWN;
 	protected ArrayList<String> availibleCameras;
 	
-	public MotionHostClient(Host host) {
-		this(host.getExternalHost(),host.getInternalHost(),host.getUsername(),host.getPassword());
+	protected int connectionTimeoutSec = GeneralPreferences.PREF_DEFAULT_CONNECTION_TIMEOUT;
+	
+	public MotionHostClient(Host host, int connectionTimeout) {
+		this(host.getExternalHost(),host.getInternalHost(),host.getUsername(),host.getPassword(), connectionTimeout);
 	}
 	
 	public MotionHostClient(String externalUrlBase, String internalUrlBase,
-			String username, String password) {
+			String username, String password, int connectionTimeout) {
 		this.externalUrlBase = externalUrlBase;
 		this.internalUrlBase = internalUrlBase;
 		
@@ -43,6 +47,7 @@ public class MotionHostClient {
 		this.externalUrlBase = host.externalUrlBase;
 		this.internalUrlBase = host.internalUrlBase;
 		this.authString = host.authString;
+		this.connectionTimeoutSec = host.connectionTimeoutSec;
 	}
 	
 	public HostStatus getHostStatus() {
@@ -60,6 +65,8 @@ public class MotionHostClient {
 			urlConnection.setRequestProperty("Authorization", "Basic " + authString);
 		}
 		urlConnection.setRequestMethod("GET");
+		urlConnection.setConnectTimeout(connectionTimeoutSec*1000);
+		
 		return urlConnection;
 	}
 	
@@ -78,7 +85,7 @@ public class MotionHostClient {
 		this.hostStatus = getHostStatus(statusCode);
 	}
 	
-	protected synchronized Object makeSimpleRequest(String reqURL, RequestSuccessCallback action) throws IOException {
+	protected Object makeSimpleRequest(String reqURL, RequestSuccessCallback action) throws IOException {
 		HttpURLConnection conn = getUrlConnection(reqURL);
 		try {
 			conn.connect();
@@ -97,7 +104,7 @@ public class MotionHostClient {
 		}
 	}
 	
-	protected synchronized Object makeRequest(String actionUrl, RequestSuccessCallback action) {
+	protected Object makeRequest(String actionUrl, RequestSuccessCallback action) {
 		try {
 			try {
 				return makeSimpleRequest(externalUrlBase + actionUrl, action);

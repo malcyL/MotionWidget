@@ -5,6 +5,7 @@
     android:orientation="horizontal"
     android:paddingLeft="35dp"
     android:clickable="true"
+    android:background="?android:attr/selectableItemBackground"
     android:descendantFocusability="blocksDescendants" >
     
     <ImageButton

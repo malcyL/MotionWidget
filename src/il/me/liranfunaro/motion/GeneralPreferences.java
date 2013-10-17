@@ -2,6 +2,7 @@ package il.me.liranfunaro.motion;
 
 import java.util.Map;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
@@ -9,8 +10,17 @@ import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 
-public class SettingsFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener {
+public class GeneralPreferences extends PreferenceFragment implements OnSharedPreferenceChangeListener {
+	
+	public static final String PREF_CONNECTION_TIMEOUT = "connection_timeout";
+	public static final int PREF_DEFAULT_CONNECTION_TIMEOUT = 30;
+	
+	public static int getConnectionTimeout(Context context) {
+		SharedPreferences defualtPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+		return defualtPrefs.getInt(GeneralPreferences.PREF_CONNECTION_TIMEOUT, PREF_DEFAULT_CONNECTION_TIMEOUT);
+	}
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {

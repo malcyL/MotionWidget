@@ -6,3 +6,4 @@
    android:initialLayout="@layout/widget"
    android:configure="il.me.liranfunaro.motion.MainActivity" 
 />
+<!--    android:previewImage="@drawable/icon" -->

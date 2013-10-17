@@ -6,6 +6,7 @@
 
 
     <!-- Example General settings -->
+    <string name="pref_connection_timeout">Connection Timeout (Seconds)</string>
     <string name="pref_header_general">General</string>
     <string name="pref_title_social_recommendations">Enable social recommendations</string>
     <string name="pref_description_social_recommendations">Recommendations for people to contact based on your message history</string>

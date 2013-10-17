@@ -16,12 +16,12 @@ public class MotionCameraClient {
 	protected final String camera;
 	protected final MotionHostClient hostClient;
 
-	public MotionCameraClient(Host host, int camera) {
-		this(host, Integer.toString(camera));
+	public MotionCameraClient(Host host, int camera, int connectionTimeout) {
+		this(host, Integer.toString(camera), connectionTimeout);
 	}
 	
-	public MotionCameraClient(Host host, String camera) {
-		this.hostClient = new MotionHostClient(host);
+	public MotionCameraClient(Host host, String camera, int connectionTimeout) {
+		this.hostClient = new MotionHostClient(host, connectionTimeout);
 		this.camera = camera;
 	}
 	

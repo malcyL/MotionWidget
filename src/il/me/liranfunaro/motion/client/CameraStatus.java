@@ -7,14 +7,6 @@ public enum CameraStatus {
 	
 	public static final Pattern PATTERN = CameraStatus.getPattern();
 	
-	public String getUserMessage() {
-		switch(this) {
-		case ACTIVE: return "Motion detect is ACTIVE";
-		case PAUSE: return "Motion detect is PAUSED";
-		default: return "Status is unknown";
-		}
-	}
-	
 	public static Pattern getPattern() {
 		StringBuilder result = new StringBuilder();
 		

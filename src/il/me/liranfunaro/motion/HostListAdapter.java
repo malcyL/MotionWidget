@@ -1,5 +1,6 @@
 package il.me.liranfunaro.motion;
 
+import il.me.liranfunaro.motion.HostPreferences.HostNotExistException;
 import il.me.liranfunaro.motion.client.HostStatus;
 import il.me.liranfunaro.motion.client.MotionHostClient;
 
@@ -46,7 +47,10 @@ public class HostListAdapter extends BaseExpandableListAdapter {
 		
 		Set<String> hostsUUID = HostPreferences.getHostsList(itsActivity);
 		for (String uuid : hostsUUID) {
-			hostsSet.add(new HostPreferences(context, uuid));
+			try {
+				hostsSet.add(new HostPreferences(context, uuid));
+			} catch (HostNotExistException e) {
+			}
 		}
 		
 		int hostCount = hostsSet.size();
@@ -122,6 +126,7 @@ public class HostListAdapter extends BaseExpandableListAdapter {
 				@Override
 				public void onClick(View v) {
 					MotionWidget.setWidgetPreferences(context, myAppWidgetId, hosts[groupPosition].getUUID().toString(), cameraNumber);
+					MotionWidget.onUpdateWidget(context, myAppWidgetId);
 					
 					Intent resultValue = new Intent();
 					resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
@@ -142,7 +147,8 @@ public class HostListAdapter extends BaseExpandableListAdapter {
 	@Override
 	public int getChildrenCount(int groupPosition) {
 		if(hostsClient[groupPosition] == null) {
-			hostsClient[groupPosition] = new MotionHostClient(hosts[groupPosition]);
+			hostsClient[groupPosition] = 
+					new MotionHostClient(hosts[groupPosition], GeneralPreferences.getConnectionTimeout(context));
 		}
 		
 		Log.i("getChildrenCount", "" + groupPosition);
@@ -197,10 +203,8 @@ public class HostListAdapter extends BaseExpandableListAdapter {
 	public View getGroupView(int groupPosition, boolean isExpanded,
             View convertView, ViewGroup parent) {
 		if (convertView == null) {
-            LayoutInflater infalInflater = (LayoutInflater) itsActivity
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = infalInflater.inflate(R.layout.host,
-                    null);
+            LayoutInflater infalInflater = itsActivity.getLayoutInflater();
+            convertView = infalInflater.inflate(R.layout.host, null);
         }
 		
 		final HostPreferences host = hosts[groupPosition];
@@ -208,9 +212,7 @@ public class HostListAdapter extends BaseExpandableListAdapter {
 		final ImageButton button = (ImageButton) convertView.findViewById(R.id.editHost);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-            	Intent intent = new Intent(v.getContext(), HostPreferencesActivity.class);
-            	intent.putExtra("uuid", host.getUUID().toString());
-            	itsActivity.startActivityForResult(intent, MainActivity.REQUEST_ADD_EDIT_HOST);
+            	host.edit(itsActivity);
             }
         });
 		
@@ -233,6 +235,7 @@ public class HostListAdapter extends BaseExpandableListAdapter {
 
 	@Override
 	public boolean isChildSelectable(int groupPosition, int childPosition) {
-		return true;
+		ArrayList<String> availibleCamera = hostsClient[groupPosition].getAvalibleCameras();
+		return availibleCamera != null;
 	}
 }

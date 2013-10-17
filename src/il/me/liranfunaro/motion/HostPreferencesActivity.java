@@ -1,5 +1,7 @@
 package il.me.liranfunaro.motion;
 
+import il.me.liranfunaro.motion.HostPreferences.HostNotExistException;
+
 import java.net.MalformedURLException;
 
 import android.app.Activity;
@@ -28,8 +30,13 @@ public class HostPreferencesActivity extends Activity {
 		uuid = getIntent().getStringExtra("uuid");
 		
 		if(uuid != null && !uuid.isEmpty()) {
-			HostPreferences host = new HostPreferences(this, uuid);
-			host.fillActivity(this);
+			HostPreferences host;
+			try {
+				host = new HostPreferences(this, uuid);
+				host.fillActivity(this);
+			} catch (HostNotExistException e) {
+				finish();
+			}
 		}
 		
 		EditText externalUri = (EditText) findViewById(R.id.hostExternalUrl);
@@ -59,6 +66,10 @@ public class HostPreferencesActivity extends Activity {
 					finish();
 				} catch (IllegalArgumentException e) {
 					Toast.makeText(v.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+				} catch (HostNotExistException e) {
+					Toast.makeText(v.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+					setResult(RESULT_CANCELED);
+					finish();
 				}
 			}
 		});

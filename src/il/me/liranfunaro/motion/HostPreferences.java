@@ -10,6 +10,7 @@ import java.util.UUID;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
@@ -37,10 +38,27 @@ public class HostPreferences implements Host, Comparable<HostPreferences> {
 	private String password;
 	
 	public HostPreferences(Context context) {
-		this(context, null);
+		if(context == null) {
+			throw new IllegalArgumentException("context and uuid must not be null");
+		}
+		
+		this.context = context;
+		this.uuid = null;
 	}
 	
-	public HostPreferences(Context context, String uuid) {
+	public static class HostNotExistException extends Exception {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 196979285441022733L;
+		
+		public HostNotExistException(String message) {
+			super(message);
+		}
+	}
+	
+	public HostPreferences(Context context, String uuid) throws HostNotExistException {
 		if(context == null) {
 			throw new IllegalArgumentException("context and uuid must not be null");
 		}
@@ -49,6 +67,9 @@ public class HostPreferences implements Host, Comparable<HostPreferences> {
 		if(uuid != null && !uuid.isEmpty()) {
 			this.uuid = UUID.fromString(uuid);
 			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+			if(!prefs.contains(PREF_PREFIX_MOTION_WIDGET_HOSTNAME + uuid)) {
+				throw new HostNotExistException("No such host");
+			}
 			
 			this.hostName = prefs.getString(PREF_PREFIX_MOTION_WIDGET_HOSTNAME + uuid, "New Host");
 			
@@ -194,6 +215,12 @@ public class HostPreferences implements Host, Comparable<HostPreferences> {
 		edit.remove(PREF_PREFIX_MOTION_WIDGET_PASSWORD + uuid);
 		
 		edit.commit();
+	}
+	
+	public void edit(Activity activity) {
+		Intent intent = new Intent(context, HostPreferencesActivity.class);
+    	intent.putExtra("uuid", getUUID().toString());
+    	activity.startActivityForResult(intent, MainActivity.REQUEST_ADD_EDIT_HOST);
 	}
 	
 	private static void setText(Activity activity, int id, String text) {
