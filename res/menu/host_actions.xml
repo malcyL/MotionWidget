@@ -1,0 +1,15 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/edit_host"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/edit_host_title"/>
+    
+    <item
+        android:id="@+id/remove_host"
+        android:orderInCategory="101"
+        android:showAsAction="never"
+        android:title="@string/remove_host_menu_title"/>
+
+</menu>
