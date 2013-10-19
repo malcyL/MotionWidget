@@ -1,6 +1,7 @@
 package il.me.liranfunaro.motion;
 
-import il.me.liranfunaro.motion.HostPreferences.HostNotExistException;
+
+import il.me.liranfunaro.motion.exceptions.HostNotExistException;
 
 import java.net.MalformedURLException;
 
@@ -23,16 +24,15 @@ public class HostPreferencesActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_add_host);
+		setContentView(R.layout.activity_host_preferences);
 		// Show the Up button in the action bar.
 		setupActionBar();
 		
 		uuid = getIntent().getStringExtra("uuid");
 		
 		if(uuid != null && !uuid.isEmpty()) {
-			HostPreferences host;
 			try {
-				host = new HostPreferences(this, uuid);
+				HostPreferences host = new HostPreferences(this, uuid, false);
 				host.fillActivity(this);
 			} catch (HostNotExistException e) {
 				finish();
@@ -59,17 +59,13 @@ public class HostPreferencesActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				try {
-					HostPreferences host = new HostPreferences(HostPreferencesActivity.this, uuid);
+					HostPreferences host = new HostPreferences(HostPreferencesActivity.this, uuid, true);
 					host.fillFromActivity(HostPreferencesActivity.this);
 					host.commit();
 					setResult(RESULT_OK);
 					finish();
-				} catch (IllegalArgumentException e) {
-					Toast.makeText(v.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
 				} catch (HostNotExistException e) {
-					Toast.makeText(v.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-					setResult(RESULT_CANCELED);
-					finish();
+					Toast.makeText(v.getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
 				}
 			}
 		});

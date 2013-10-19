@@ -1,8 +1,8 @@
 package il.me.liranfunaro.motion;
 
-import il.me.liranfunaro.motion.HostPreferences.HostNotExistException;
 import il.me.liranfunaro.motion.client.HostStatus;
 import il.me.liranfunaro.motion.client.MotionHostClient;
+import il.me.liranfunaro.motion.exceptions.HostNotExistException;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -48,7 +48,7 @@ public class HostListAdapter extends BaseExpandableListAdapter {
 		Set<String> hostsUUID = HostPreferences.getHostsList(itsActivity);
 		for (String uuid : hostsUUID) {
 			try {
-				hostsSet.add(new HostPreferences(context, uuid));
+				hostsSet.add(new HostPreferences(context, uuid, false));
 			} catch (HostNotExistException e) {
 			}
 		}

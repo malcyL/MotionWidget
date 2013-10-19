@@ -1,6 +1,7 @@
 package il.me.liranfunaro.motion;
 
 import il.me.liranfunaro.motion.client.Host;
+import il.me.liranfunaro.motion.exceptions.HostNotExistException;
 
 import java.net.MalformedURLException;
 import java.util.Collections;
@@ -39,48 +40,44 @@ public class HostPreferences implements Host, Comparable<HostPreferences> {
 	
 	public HostPreferences(Context context) {
 		if(context == null) {
-			throw new IllegalArgumentException("context and uuid must not be null");
+			throw new IllegalArgumentException("context must not be null");
 		}
 		
 		this.context = context;
 		this.uuid = null;
 	}
 	
-	public static class HostNotExistException extends Exception {
-
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 196979285441022733L;
-		
-		public HostNotExistException(String message) {
-			super(message);
-		}
-	}
-	
-	public HostPreferences(Context context, String uuid) throws HostNotExistException {
-		if(context == null) {
-			throw new IllegalArgumentException("context and uuid must not be null");
+	public HostPreferences(Context context, String uuid, boolean create) throws HostNotExistException {
+		if(context == null) {		
+			throw new IllegalArgumentException("context must not be null");
 		}
 		
 		this.context = context;
-		if(uuid != null && !uuid.isEmpty()) {
-			this.uuid = UUID.fromString(uuid);
-			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-			if(!prefs.contains(PREF_PREFIX_MOTION_WIDGET_HOSTNAME + uuid)) {
-				throw new HostNotExistException("No such host");
+		
+		if(uuid == null || uuid.isEmpty()) {
+			if(create) {
+				this.uuid = null;
+				return;
+			} else {
+				throw new HostNotExistException("Host not exists");
 			}
-			
-			this.hostName = prefs.getString(PREF_PREFIX_MOTION_WIDGET_HOSTNAME + uuid, "New Host");
-			
-			this.externalUrl = prefs.getString(PREF_PREFIX_MOTION_WIDGET_EXTERNAL + uuid, "");
-			this.internalUrl = prefs.getString(PREF_PREFIX_MOTION_WIDGET_INTERNAL + uuid, "");
-			
-			this.username = prefs.getString(PREF_PREFIX_MOTION_WIDGET_USERNAME + uuid, "");
-			this.password = prefs.getString(PREF_PREFIX_MOTION_WIDGET_PASSWORD + uuid, "");
-		} else {
-			this.uuid = null;
 		}
+		
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		
+		if(!create && !getHostsList(prefs).contains(uuid)) {
+			throw new HostNotExistException("Host not exists");	
+		}
+		
+		this.uuid = UUID.fromString(uuid);
+		
+		this.hostName = prefs.getString(PREF_PREFIX_MOTION_WIDGET_HOSTNAME + uuid, "New Host");
+		
+		this.externalUrl = prefs.getString(PREF_PREFIX_MOTION_WIDGET_EXTERNAL + uuid, "");
+		this.internalUrl = prefs.getString(PREF_PREFIX_MOTION_WIDGET_INTERNAL + uuid, "");
+		
+		this.username = prefs.getString(PREF_PREFIX_MOTION_WIDGET_USERNAME + uuid, "");
+		this.password = prefs.getString(PREF_PREFIX_MOTION_WIDGET_PASSWORD + uuid, "");
 	}
 	
 	public void fillActivity(Activity activity) {
@@ -129,29 +126,15 @@ public class HostPreferences implements Host, Comparable<HostPreferences> {
 		return getHostsList(getSharedPreferences(context));
 	}
 	
-	public void setHostList(Set<String> hosts) {
-		setHostList(context, hosts);
-	}
-	
-	public static void setHostList(Context context, Set<String> hosts) {
-		setHostList(getSharedPreferences(context), hosts);
-	}
-	
-	public static void setHostList(SharedPreferences prefs, Set<String> hosts) {
-		Editor editor = prefs.edit();
-		setHostList(editor, hosts);
-		editor.commit();
-	}
-	
-	public static void setHostList(Editor editor, Set<String> hosts) {
+	private static void setHostList(Editor editor, Set<String> hosts) {
 		editor.putStringSet(PREF_ALL_HOSTS_UUID_LIST, hosts);
 	}
 	
-	public SharedPreferences getSharedPreferences() {
+	private SharedPreferences getSharedPreferences() {
 		return getSharedPreferences(context);
 	}
 	
-	public static SharedPreferences getSharedPreferences(Context context) {
+	private static SharedPreferences getSharedPreferences(Context context) {
 		return PreferenceManager.getDefaultSharedPreferences(context);
 	}
 	

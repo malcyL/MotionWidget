@@ -2,10 +2,10 @@ package uk.me.malcolmlandon.motion;
 
 import il.me.liranfunaro.motion.GeneralPreferences;
 import il.me.liranfunaro.motion.HostPreferences;
-import il.me.liranfunaro.motion.HostPreferences.HostNotExistException;
 import il.me.liranfunaro.motion.R;
 import il.me.liranfunaro.motion.client.CameraStatus;
 import il.me.liranfunaro.motion.client.MotionCameraClient;
+import il.me.liranfunaro.motion.exceptions.HostNotExistException;
 
 import java.util.Calendar;
 
@@ -18,6 +18,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.view.View;
 import android.widget.RemoteViews;
 
 public class MotionWidget extends AppWidgetProvider {
@@ -86,11 +87,12 @@ public class MotionWidget extends AppWidgetProvider {
 				snapshotPendingIntent);
 
 		appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
-
+		
 		try {
 			HostPreferences host = getWidgetHostPreferences(context, appWidgetId);
 			doAsyncAction(context, ACTION_WIDGET_STATUS, host, appWidgetId);
 		} catch (HostNotExistException e) {
+			updateWidget(appWidgetManager, remoteViews, false, "Host does not exist", "error", appWidgetId);
 		}
 	}
 
@@ -120,13 +122,13 @@ public class MotionWidget extends AppWidgetProvider {
 	static HostPreferences getWidgetHostPreferences(Context context,
 			int appWidgetId) throws HostNotExistException {
 		String uuid = getWidgetUUID(context, appWidgetId);
-		return new HostPreferences(context, uuid);
+		return new HostPreferences(context, uuid, false);
 	}
 
 	static HostPreferences getWidgetHostPreferences(Context context,
 			SharedPreferences prefs, int appWidgetId) throws HostNotExistException {
 		String uuid = getWidgetUUID(prefs, appWidgetId);
-		return new HostPreferences(context, uuid);
+		return new HostPreferences(context, uuid, false);
 	}
 
 	static String getWidgetCamera(Context context, int appWidgetId) {
@@ -206,6 +208,7 @@ public class MotionWidget extends AppWidgetProvider {
 				HostPreferences host = getWidgetHostPreferences(context, prefs, appWidgetId);
 				doAsyncAction(context, action, host, appWidgetId);
 			} catch (HostNotExistException e) {
+				removeWidgetPreferences(context, appWidgetId);
 			}
         }
 		
@@ -241,17 +244,36 @@ public class MotionWidget extends AppWidgetProvider {
 				try {
 					status = doAction(camera, action);
 				} finally {
-					rv.setTextViewText(
-							R.id.status,
-							getStatusText(host, camera, status));
-					String time = DateFormat.getTimeFormat(context).format(
-							Calendar.getInstance().getTime());
-					rv.setTextViewText(R.id.lastUpdate, "last update: " + time);
-					mgr.updateAppWidget(appWidgetId, rv);
+					updateWidget(context, mgr, rv, true, getStatusText(host, camera, status), appWidgetId);
 				}
 
 			}
 		}).start();
+	}
+	
+	public static void enableWidget(RemoteViews remoteViews, boolean enabled) {
+		int visibility = enabled ? View.VISIBLE : View.GONE;
+		
+		remoteViews.setViewVisibility(R.id.button_status, visibility);
+		remoteViews.setViewVisibility(R.id.button_start, visibility);
+		remoteViews.setViewVisibility(R.id.button_pause, visibility);
+		remoteViews.setViewVisibility(R.id.button_snapshot, visibility);
+	}
+	
+	public static void updateWidget(Context context, AppWidgetManager appWidgetManager, 
+			RemoteViews remoteViews, boolean enabled ,String statusText, int appWidgetId) {
+		String time = DateFormat.getTimeFormat(context).format(
+				Calendar.getInstance().getTime());
+		updateWidget(appWidgetManager, remoteViews, enabled, statusText, 
+				"last update: " + time, appWidgetId);
+	}
+	
+	public static void updateWidget(AppWidgetManager appWidgetManager, 
+			RemoteViews remoteViews, boolean enabled ,String statusText, String lastUpdateText, int appWidgetId) {
+		remoteViews.setTextViewText(R.id.status,statusText);
+		remoteViews.setTextViewText(R.id.lastUpdate, lastUpdateText);
+		enableWidget(remoteViews, enabled);
+		appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
 	}
 
 	public static CameraStatus doAction(MotionCameraClient camera, String action) {
