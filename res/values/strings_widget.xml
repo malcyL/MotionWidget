@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="status">Status</string>
+    <string name="start">Start</string>
+    <string name="pause">Pause</string>
+    <string name="snapshot">Snapshot</string>
+</resources>
