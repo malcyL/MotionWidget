@@ -23,6 +23,6 @@ http://www.apache.org/licenses/LICENSE-2.0"
     <string name="motion_project_title">Linux Motion Detection</string>
     <string name="motion_project_ref">
 "Motion Control is an Android app for controlling the linux motion detection software Motion
-http://www.lavrsen.dk/foswiki/bin/view/Motion/WebHome"
+http://www.lavrsen.dk/foswiki/bin/view/Motion"
     </string>
 </resources>

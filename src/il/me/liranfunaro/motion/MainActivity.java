@@ -70,7 +70,7 @@ public class MainActivity extends Activity {
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 		ExpandableListContextMenuInfo info = (ExpandableListContextMenuInfo)item.getMenuInfo();
-		final HostPreferences host = (HostPreferences)adapter.getGroup((int)info.packedPosition);
+		final HostPreferences host = (HostPreferences)adapter.getGroup((int)info.id);
 		
 		switch (item.getItemId()) {
 		case R.id.edit_host:
