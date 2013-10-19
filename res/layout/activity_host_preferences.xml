@@ -1,157 +1,179 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="match_parent"
-    android:scrollbars="vertical" >
+    android:layout_height="fill_parent" >
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
-
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:text="@string/add_host_title"
-            android:textStyle="bold" />
-
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="2dp"
-            android:background="#FF909090" />
-
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:text="@string/host_name" />
-
-        <EditText
-            android:id="@+id/hostname"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textAutoCorrect" />
-        
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="2dp"
-            android:background="#FF909090" />
-
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:text="@string/base_url_title" />
-
-        <EditText
-            android:id="@+id/hostExternalUrl"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textUri" />
-
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dip"
-            android:text="@string/base_url_help"
-            android:textSize="12sp" />
-
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="2dip"
-            android:background="#FF909090" />
-
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dip"
-            android:text="@string/alter_url_title" />
-
-        <EditText
-            android:id="@+id/hostInternalUrl"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textUri" />
-
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dip"
-            android:text="@string/alter_url_help"
-            android:textSize="12sp" />
-
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="2dip"
-            android:background="#FF909090" />
-
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dip"
-            android:text="@string/username_title" />
-
-        <EditText
-            android:id="@+id/hostUsername"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textNoSuggestions" />
-
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="2dip"
-            android:background="#FF909090" />
-
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dip"
-            android:text="@string/password_title" />
-
-        <EditText
-            android:id="@+id/hostPassword"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPassword" />
-
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="2dip"
-            android:background="#FF909090" />
+        android:orientation="vertical"
+        android:padding="15dp" >
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingBottom="10dip"
-            android:paddingLeft="10dip"
-            android:paddingRight="10dip"
-            android:paddingTop="10dip"
-            android:weightSum="1.0" >
+            android:divider="?android:dividerHorizontal"
+            android:orientation="vertical"
+            android:paddingBottom="15dp"
+            android:showDividers="middle" >
 
-            <Button
-                android:id="@+id/cancelbutton"
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:background="?android:attr/selectableItemBackground"
-                android:padding="10dip"
-                android:text="@android:string/cancel" />
+                android:text="@string/host_name"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
-            <View
-                android:layout_width="1dp"
-                android:layout_height="fill_parent"
-                android:background="#FF909090" />
-
-            <Button
-                android:id="@+id/okbutton"
-                android:layout_width="match_parent"
+            <EditText
+                android:id="@+id/hostname"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:background="?android:attr/selectableItemBackground"
+                android:inputType="textAutoCorrect" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:divider="?android:dividerHorizontal"
+            android:orientation="vertical"
+            android:paddingBottom="15dp"
+            android:showDividers="middle" >
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:divider="?android:dividerVertical"
+                android:orientation="horizontal"
+                android:showDividers="middle" >
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/base_url_help_button"
+                    android:layout_alignParentLeft="true"
+                    android:text="@string/base_url_title"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <ImageButton
+                    android:id="@+id/base_url_help_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:adjustViewBounds="true"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:baselineAlignBottom="true"
+                    android:contentDescription="@string/base_url_help_description"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_action_help" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/base_url_help_text"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
                 android:padding="10dip"
-                android:text="@android:string/ok" />
+                android:text="@string/base_url_help"
+                android:textSize="12sp"
+                android:visibility="gone" />
+
+            <EditText
+                android:id="@+id/hostExternalUrl"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textUri" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:divider="?android:dividerHorizontal"
+            android:orientation="vertical"
+            android:paddingBottom="15dp"
+            android:showDividers="middle" >
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:divider="?android:dividerVertical"
+                android:orientation="horizontal"
+                android:showDividers="middle" >
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/alter_url_help_button"
+                    android:layout_alignParentLeft="true"
+                    android:text="@string/alter_url_title"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <ImageButton
+                    android:id="@+id/alter_url_help_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:adjustViewBounds="true"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:baselineAlignBottom="true"
+                    android:contentDescription="@string/alter_url_help_description"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_action_help" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/alter_url_help_text"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dip"
+                android:text="@string/alter_url_help"
+                android:textSize="12sp"
+                android:visibility="gone" />
+
+            <EditText
+                android:id="@+id/hostInternalUrl"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textUri" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:divider="?android:dividerHorizontal"
+            android:orientation="vertical"
+            android:paddingBottom="15dp"
+            android:showDividers="middle" >
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/username_title"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <EditText
+                android:id="@+id/hostUsername"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textNoSuggestions" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:divider="?android:dividerHorizontal"
+            android:orientation="vertical"
+            android:paddingBottom="15dp"
+            android:showDividers="middle" >
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/password_title"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <EditText
+                android:id="@+id/hostPassword"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword" />
         </LinearLayout>
     </LinearLayout>
 

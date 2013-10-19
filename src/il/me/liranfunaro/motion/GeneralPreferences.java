@@ -11,15 +11,23 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 public class GeneralPreferences extends PreferenceFragment implements OnSharedPreferenceChangeListener {
 	
 	public static final String PREF_CONNECTION_TIMEOUT = "connection_timeout";
 	public static final int PREF_DEFAULT_CONNECTION_TIMEOUT = 30;
+	public static final String PREF_DEFAULT_CONNECTION_TIMEOUT_STR = Integer.toString(PREF_DEFAULT_CONNECTION_TIMEOUT);
 	
 	public static int getConnectionTimeout(Context context) {
 		SharedPreferences defualtPrefs = PreferenceManager.getDefaultSharedPreferences(context);
-		return defualtPrefs.getInt(GeneralPreferences.PREF_CONNECTION_TIMEOUT, PREF_DEFAULT_CONNECTION_TIMEOUT);
+		String timeoutStr = defualtPrefs.getString(GeneralPreferences.PREF_CONNECTION_TIMEOUT, PREF_DEFAULT_CONNECTION_TIMEOUT_STR);
+		try {
+			return Integer.parseInt(timeoutStr);
+		} catch (Exception e) {
+			Log.e("IntegerError",e.getMessage(), e);
+			return PREF_DEFAULT_CONNECTION_TIMEOUT;
+		}
 	}
 	
 	@Override
@@ -59,9 +67,6 @@ public class GeneralPreferences extends PreferenceFragment implements OnSharedPr
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 		updateSummery(sharedPreferences, key);
-//        if (key.equals(getResources().getString(R.string.pref_default_display_name))) {
-//        	
-//        }
     }
 	
 	@Override

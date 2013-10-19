@@ -1,8 +1,10 @@
-MotionWidget
+MotionControl
 ============
 
-Motion Widget is an Android widget for controlling the linux motion detection
-software "Motion" - http://www.lavrsen.dk/foswiki/bin/view/Motion/WebHome
+Motion Control is an Android app for controlling the linux motion detection software Motion
+http://www.lavrsen.dk/foswiki/bin/view/Motion/WebHome
+
+Motion Control is open source project, continuing of Motion Widget app.
 
 License
 =======

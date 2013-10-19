@@ -2,11 +2,15 @@
 <resources>
     <string name="widget_conf_title">Motion Widget Configuration</string>
     <string name="base_url_title">Motion URL Base</string>
-    <string name="base_url_help">The base URL of your motion server, including a port if necessary.
+    <string name="base_url_help_description">What is my base URL?</string>
+    <string name="base_url_help">
+        The base URL of your motion server, including a port if necessary.
         e.g. just enter http://www.yourmotionserver.com:8000 when the full path to the camera API is http://www.yourmotionserver.com:8000/0/detection/start
 	</string>
     <string name="alter_url_title">Alternative URL Base</string>
-    <string name="alter_url_help">An alternative base URL for your motion server.
+    <string name="alter_url_help_description">What is my alternative URL?</string>
+    <string name="alter_url_help">
+        An alternative base URL for your motion server.
         Useful when on the same home network as the motion server, when the external domain name does not resolve correctly.
         e.g. http://192.168.0.1:8000 This 2nd URL will be used if the 1st is unreachable.
     </string>
@@ -16,7 +20,7 @@
     <string name="action_settings">Settings</string>
     <string name="add_host_title">Add New Host</string>
     <string name="host_name">Host Name</string>
-    <string name="title_activity_add_host">AddHostActivity</string>
+    <string name="title_activity_add_host">Host Preferences</string>
     <string name="edit_host_title">Edit</string>
     <string name="edit_host_description">Edit the host properties</string>
     <string name="remove_host_menu_title">Remove</string>
@@ -25,4 +29,6 @@
         Are you sure you want to remove this host?
         This action can not be undone.
 	</string>
+
+    <string name="save">Save</string>	
 </resources>

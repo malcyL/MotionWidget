@@ -13,8 +13,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,30 +45,11 @@ public class HostPreferencesActivity extends Activity {
 		externalUri.setOnFocusChangeListener (new UriInputNormalizer(true));
 		internalUri.setOnFocusChangeListener (new UriInputNormalizer(false));
 		
-		Button cancel = (Button) findViewById(R.id.cancelbutton);
-		cancel.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-				setResult(RESULT_CANCELED);
-				finish();
-			}
-		});
+		ImageButton baseHelp = (ImageButton) findViewById(R.id.base_url_help_button);
+		baseHelp.setOnClickListener(new ShowHideClickListner(R.id.base_url_help_text));
 		
-		Button ok = (Button) findViewById(R.id.okbutton);
-		ok.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				try {
-					HostPreferences host = new HostPreferences(HostPreferencesActivity.this, uuid, true);
-					host.fillFromActivity(HostPreferencesActivity.this);
-					host.commit();
-					setResult(RESULT_OK);
-					finish();
-				} catch (HostNotExistException e) {
-					Toast.makeText(v.getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-				}
-			}
-		});
+		ImageButton alterHelp = (ImageButton) findViewById(R.id.alter_url_help_button);
+		alterHelp.setOnClickListener(new ShowHideClickListner(R.id.alter_url_help_text));
 	}
 	
 	/**
@@ -83,13 +64,25 @@ public class HostPreferencesActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.add_host, menu);
+		getMenuInflater().inflate(R.menu.host_preferences, menu);
 		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+		case R.id.host_save:
+			try {
+				HostPreferences host = new HostPreferences(HostPreferencesActivity.this, uuid, true);
+				host.fillFromActivity(HostPreferencesActivity.this);
+				host.commit();
+				setResult(RESULT_OK);
+				finish();
+			} catch (HostNotExistException e) {
+				Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+			}
+			return true;
+		case R.id.host_cancel:
 		case android.R.id.home:
 			// This ID represents the Home or Up button. In the case of this
 			// activity, the Up button is shown. Use NavUtils to allow users
@@ -98,11 +91,27 @@ public class HostPreferencesActivity extends Activity {
 			//
 			// http://developer.android.com/design/patterns/navigation.html#up-vs-back
 			//
+			setResult(RESULT_CANCELED);
 			NavUtils.navigateUpFromSameTask(this);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
+	
+	class ShowHideClickListner implements OnClickListener {
+		private final int viewId;
+		
+		public ShowHideClickListner(int viewId) {
+			this.viewId = viewId;
+		}
+
+		@Override
+		public void onClick(View clickedView) {
+			View v = findViewById(viewId);
+			v.setVisibility(v.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
+		}
+	}
+	
 
 	class UriInputNormalizer implements TextView.OnFocusChangeListener {
 		private final boolean isMendatory;
