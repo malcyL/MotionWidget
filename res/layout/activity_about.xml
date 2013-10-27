@@ -177,7 +177,7 @@
 	                android:adjustViewBounds="true"
 	                android:layout_marginRight="10dp"
 	                android:contentDescription="@string/or_eitan_name"
-	                android:src="@drawable/malcolm_landon_image" />
+	                android:src="@drawable/or_eitan_image" />
 	            
 	            <LinearLayout
 			        android:layout_width="fill_parent"
