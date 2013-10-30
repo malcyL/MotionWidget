@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="il.me.liranfunaro.motion"
-    android:versionCode="2"
-    android:versionName="1.0.1" >
+    package="uk.me.malcolmlandon.motion"
+    android:versionCode="3"
+    android:versionName="2.0" >
 
     <uses-sdk
         android:minSdkVersion="11"
@@ -60,6 +60,22 @@
             android:name="il.me.liranfunaro.motion.AboutActivity"
             android:label="@string/title_activity_about"
             android:parentActivityName="il.me.liranfunaro.motion.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="il.me.liranfunaro.motion.MainActivity" />
+        </activity>
+        <activity
+            android:name="il.me.liranfunaro.motion.CameraConfigurationActivity"
+            android:label="@string/title_activity_camera_configuration"
+            android:launchMode="singleTop"
+            android:parentActivityName="il.me.liranfunaro.motion.MainActivity" >
+            <intent-filter>
+		        <action android:name="android.intent.action.SEARCH" />
+		    </intent-filter>
+		    <meta-data android:name="android.app.default_searchable"
+                   android:value="il.me.liranfunaro.motion.CameraConfigurationActivity" />
+		    <meta-data android:name="android.app.searchable"
+                   android:resource="@xml/searchable"/>
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="il.me.liranfunaro.motion.MainActivity" />

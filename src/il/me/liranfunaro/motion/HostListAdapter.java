@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import uk.me.malcolmlandon.motion.MotionWidget;
+import uk.me.malcolmlandon.motion.R;
 import android.app.Activity;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
@@ -92,6 +93,7 @@ public class HostListAdapter extends BaseExpandableListAdapter {
 		
 		TextView item = (TextView) convertView.findViewById(R.id.cameraNumber);
 		ImageButton refreshBtn = (ImageButton) convertView.findViewById(R.id.refreshCamera);
+		ImageButton settingsBtn = (ImageButton) convertView.findViewById(R.id.cameraConfiguration);
 		
 		refreshBtn.setOnClickListener(new OnClickListener() {
 			
@@ -113,10 +115,26 @@ public class HostListAdapter extends BaseExpandableListAdapter {
 			item.setText(hostStatus.getUserMessage());
 			break;
 		default:
-			if(availibleCamera != null) {
+			if(cameraNumber != null) {
 				item.setText("Camera #" + cameraNumber);
+				
+				settingsBtn.setOnClickListener(new OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						Intent intent = new Intent(context, CameraConfigurationActivity.class);
+						intent.putExtra(CameraConfigurationActivity.EXTRA_HOST_UUID, hosts[groupPosition].getUUID().toString());
+						intent.putExtra(CameraConfigurationActivity.EXTRA_CAMERA_NUMBER, cameraNumber);
+						itsActivity.startActivity(intent);
+					}
+				});
+				
+				settingsBtn.setVisibility(View.VISIBLE);
+				
 			} else {
 				item.setText("Loading...");
+				
+				settingsBtn.setVisibility(View.INVISIBLE);
 			}
 		}
 		

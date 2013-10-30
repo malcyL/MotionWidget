@@ -2,13 +2,11 @@ package uk.me.malcolmlandon.motion;
 
 import il.me.liranfunaro.motion.GeneralPreferences;
 import il.me.liranfunaro.motion.HostPreferences;
-import il.me.liranfunaro.motion.R;
+import uk.me.malcolmlandon.motion.R;
 import il.me.liranfunaro.motion.client.CameraStatus;
 import il.me.liranfunaro.motion.client.MotionCameraClient;
 import il.me.liranfunaro.motion.exceptions.HostNotExistException;
-
 import java.util.Calendar;
-
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -128,7 +126,12 @@ public class MotionWidget extends AppWidgetProvider {
 	static HostPreferences getWidgetHostPreferences(Context context,
 			SharedPreferences prefs, int appWidgetId) throws HostNotExistException {
 		String uuid = getWidgetUUID(prefs, appWidgetId);
-		return new HostPreferences(context, uuid, false);
+		if(uuid != null && !uuid.isEmpty()) {
+			return new HostPreferences(context, uuid, false);
+		} else {
+			MotionWidgetOldConfigure old = new MotionWidgetOldConfigure(context, appWidgetId);
+			return old.migratePreferences();
+		}
 	}
 
 	static String getWidgetCamera(Context context, int appWidgetId) {

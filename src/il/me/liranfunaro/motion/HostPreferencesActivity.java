@@ -5,6 +5,7 @@ import il.me.liranfunaro.motion.exceptions.HostNotExistException;
 
 import java.net.MalformedURLException;
 
+import uk.me.malcolmlandon.motion.R;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -78,7 +79,7 @@ public class HostPreferencesActivity extends Activity {
 				host.commit();
 				setResult(RESULT_OK);
 				finish();
-			} catch (HostNotExistException e) {
+			} catch (Exception e) {
 				Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
 			}
 			return true;

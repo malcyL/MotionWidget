@@ -2,6 +2,7 @@ package il.me.liranfunaro.motion;
 
 import java.util.Map;
 
+import uk.me.malcolmlandon.motion.R;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -36,6 +37,7 @@ public class GeneralPreferences extends PreferenceFragment implements OnSharedPr
 
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.pref_general);
+        
         init();
     }
 	

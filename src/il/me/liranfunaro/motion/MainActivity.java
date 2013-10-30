@@ -1,5 +1,6 @@
 package il.me.liranfunaro.motion;
 
+import uk.me.malcolmlandon.motion.R;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.appwidget.AppWidgetManager;
@@ -77,22 +78,20 @@ public class MainActivity extends Activity {
 			host.edit(this);
 			return true;
 		case R.id.remove_host:
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage(R.string.remove_host_alert)
-					.setTitle(R.string.remove_host_title)
-					.setCancelable(true)
-					.setPositiveButton(android.R.string.yes,
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int id) {
-									host.remove();
-									adapter.updateHosts(true);
-								}
-							});
-			builder.setNegativeButton(android.R.string.no, null);
-
-			AlertDialog dialog = builder.create();
-			dialog.show();
+			new AlertDialog.Builder(this)
+				.setMessage(R.string.remove_host_alert)
+				.setTitle(R.string.remove_host_title)
+				.setCancelable(true)
+				.setNegativeButton(android.R.string.no, null)
+				.setPositiveButton(android.R.string.yes,
+					new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog,
+								int id) {
+							host.remove();
+							adapter.updateHosts(true);
+						}
+					})
+				.show();
 			
 			return true;
 		default:

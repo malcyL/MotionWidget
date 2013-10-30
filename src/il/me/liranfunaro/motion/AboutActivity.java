@@ -1,5 +1,6 @@
 package il.me.liranfunaro.motion;
 
+import uk.me.malcolmlandon.motion.R;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;

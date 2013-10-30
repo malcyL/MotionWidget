@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.UUID;
 
+import uk.me.malcolmlandon.motion.R;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -71,13 +72,13 @@ public class HostPreferences implements Host, Comparable<HostPreferences> {
 		
 		this.uuid = UUID.fromString(uuid);
 		
-		this.hostName = prefs.getString(PREF_PREFIX_MOTION_WIDGET_HOSTNAME + uuid, "New Host");
-		
 		this.externalUrl = prefs.getString(PREF_PREFIX_MOTION_WIDGET_EXTERNAL + uuid, "");
 		this.internalUrl = prefs.getString(PREF_PREFIX_MOTION_WIDGET_INTERNAL + uuid, "");
 		
 		this.username = prefs.getString(PREF_PREFIX_MOTION_WIDGET_USERNAME + uuid, "");
 		this.password = prefs.getString(PREF_PREFIX_MOTION_WIDGET_PASSWORD + uuid, "");
+		
+		this.hostName = prefs.getString(PREF_PREFIX_MOTION_WIDGET_HOSTNAME + uuid, "New Host");
 	}
 	
 	public void fillActivity(Activity activity) {
@@ -88,7 +89,7 @@ public class HostPreferences implements Host, Comparable<HostPreferences> {
 		setText(activity, R.id.hostPassword, this.password);
 	}
 	
-	public void fillFromActivity(Activity activity) {
+	public void fillFromActivity(Activity activity) throws MalformedURLException {
 		this.hostName = getText(activity, R.id.hostname);
 		
 		String externalUrlBase = getText(activity, R.id.hostExternalUrl);
@@ -98,20 +99,17 @@ public class HostPreferences implements Host, Comparable<HostPreferences> {
 			throw new IllegalArgumentException("Must supply host url");
 		}
 		
-		try {
-			externalUrl = new UriParameters(externalUrlBase).getFullUrl();
-			
-			if(internalUrlBase != null && !internalUrlBase.isEmpty()) {
-				internalUrl = new UriParameters(internalUrlBase).getFullUrl();
-			} else {
-				internalUrl = "";
-			}
-		} catch (MalformedURLException e) {
-			throw new IllegalArgumentException(e.getMessage());
+		UriParameters externalUrlUriParams = new UriParameters(externalUrlBase);
+		externalUrl = externalUrlUriParams.getFullUrl();
+		
+		if(internalUrlBase != null && !internalUrlBase.isEmpty()) {
+			internalUrl = new UriParameters(internalUrlBase).getFullUrl();
+		} else {
+			internalUrl = "";
 		}
 		
 		if(hostName == null || hostName.isEmpty()) {
-			hostName = externalUrl;
+			hostName = externalUrlUriParams.getHost();
 		}
 		
 		this.username = getText(activity, R.id.hostUsername);
@@ -257,7 +255,12 @@ public class HostPreferences implements Host, Comparable<HostPreferences> {
 
 	@Override
 	public void setExternalHost(String externalHost) throws MalformedURLException {
-		this.externalUrl = new UriParameters(externalHost).getFullUrl();
+		UriParameters externalUrlUriParams = new UriParameters(externalHost);
+		this.externalUrl = externalUrlUriParams.getFullUrl();
+		
+		if(hostName == null || hostName.isEmpty()) {
+			hostName = externalUrlUriParams.getHost();
+		}
 	}
 
 	@Override
@@ -271,11 +274,17 @@ public class HostPreferences implements Host, Comparable<HostPreferences> {
 
 	@Override
 	public void setName(String name) throws IllegalArgumentException {
-		if(name == null || name.isEmpty()) {
-			throw new IllegalArgumentException("hostname must not be empty");
-		}
-		
 		this.hostName = name;
+		
+		if(hostName == null || hostName.isEmpty()) {
+			UriParameters externalUrlUriParams;
+			try {
+				externalUrlUriParams = new UriParameters(externalUrl);
+				hostName = externalUrlUriParams.getHost();
+			} catch (MalformedURLException e) {
+				throw new IllegalArgumentException(e.getMessage());
+			}
+		}
 	}
 
 	@Override

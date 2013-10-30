@@ -4,6 +4,7 @@ import il.me.liranfunaro.motion.client.MotionHostClient.RequestSuccessCallback;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Scanner;
 
 public class MotionCameraClient {
@@ -12,6 +13,9 @@ public class MotionCameraClient {
 	protected static final String START_URL_TEMPLATE = "/%s/detection/start";
 	protected static final String PAUSE_URL_TEMPLATE = "/%s/detection/pause";
 	protected static final String SNAPSHOT_URL_TEMPLATE = "/%s/action/snapshot";
+	
+	protected static final String CONFIGURATION_LIST_URL_TEMPLATE = "/%s/config/list";
+	protected static final String WRITE_CONFIGURATIONS_URL_TEMPLATE = "/%s/config/writeyes";
 	
 	protected final String camera;
 	protected final MotionHostClient hostClient;
@@ -106,4 +110,34 @@ public class MotionCameraClient {
 		});
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<CameraConfiguration> getConfigurations() {
+		return (List<CameraConfiguration>) hostClient.makeRequest(getRequestURL(CONFIGURATION_LIST_URL_TEMPLATE), new RequestSuccessCallback() {
+			
+			@Override
+			public Object onSuccess(InputStream resultStream) throws IOException {
+				return CameraConfiguration.getCameraConfiguration(resultStream);
+			}
+		});
+	}
+	
+	public CameraStatus writeConfigurations() {
+		return (CameraStatus) hostClient.makeRequest(getRequestURL(WRITE_CONFIGURATIONS_URL_TEMPLATE), new RequestSuccessCallback() {
+			
+			@Override
+			public CameraStatus onSuccess(InputStream resultStream) throws IOException {
+				return CameraStatus.UNKNOWN;
+			}
+		});
+	}
+	
+	public CameraStatus updateConfiguration(CameraConfiguration conf) {
+		return (CameraStatus) hostClient.makeRequest(conf.getSetAddress(), new RequestSuccessCallback() {
+			
+			@Override
+			public CameraStatus onSuccess(InputStream resultStream) throws IOException {
+				return CameraStatus.UNKNOWN;
+			}
+		});
+	}
 }
