@@ -235,7 +235,9 @@ public class MotionWidget extends AppWidgetProvider {
 		SharedPreferences prefs = getSharedPreferences(context);
 		final MotionCameraClient camera = getWidgetCameraClient(context, prefs, host, appWidgetId);
 
-		rv.setTextViewText(R.id.lastUpdate, "loading...");
+		rv.setViewVisibility(R.id.lastUpdate, View.GONE);
+		rv.setViewVisibility(R.id.updatingIndicator, View.VISIBLE);
+		//rv.setTextViewText(R.id.lastUpdate, "loading...");
 		mgr.updateAppWidget(appWidgetId, rv);
 
 		new Thread(new Runnable() {
@@ -274,6 +276,8 @@ public class MotionWidget extends AppWidgetProvider {
 	public static void updateWidget(AppWidgetManager appWidgetManager, 
 			RemoteViews remoteViews, boolean enabled ,String statusText, String lastUpdateText, int appWidgetId) {
 		remoteViews.setTextViewText(R.id.status,statusText);
+		remoteViews.setViewVisibility(R.id.updatingIndicator, View.GONE);
+		remoteViews.setViewVisibility(R.id.lastUpdate, View.VISIBLE);
 		remoteViews.setTextViewText(R.id.lastUpdate, lastUpdateText);
 		enableWidget(remoteViews, enabled);
 		appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
