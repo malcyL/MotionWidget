@@ -1,4 +1,4 @@
-package il.me.liranfunaro.motion;
+package il.liranfunaro.motion;
 
 import android.app.Activity;
 import android.os.Bundle;

@@ -1,10 +1,10 @@
-package il.me.liranfunaro.motion.client;
+package il.liranfunaro.motion.client;
 
-import il.me.liranfunaro.motion.client.MotionHostClient.RequestSuccessCallback;
+import il.liranfunaro.motion.client.MotionHostClient.RequestSuccessCallback;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class MotionCameraClient {
@@ -16,6 +16,8 @@ public class MotionCameraClient {
 	
 	protected static final String CONFIGURATION_LIST_URL_TEMPLATE = "/%s/config/list";
 	protected static final String WRITE_CONFIGURATIONS_URL_TEMPLATE = "/%s/config/writeyes";
+	
+	protected static final String CAMERA_CONF_STREAM_PORT = "stream_port";
 	
 	protected final String camera;
 	protected final MotionHostClient hostClient;
@@ -79,6 +81,36 @@ public class MotionCameraClient {
 			}
 		});
 	}
+	
+	public void getLiveStream(RequestSuccessCallback callback) {
+		HashMap<String, CameraConfiguration> conf = getConfigurations();
+		if(conf == null) {
+			return;
+		}
+		
+		CameraConfiguration streamPortConf = conf.get(CAMERA_CONF_STREAM_PORT);
+		if(streamPortConf == null) {
+			return;
+		}
+		
+		String streamPort = streamPortConf.getValue();
+		if(streamPort == null || streamPort.isEmpty()) {
+			return;
+		}
+		
+		hostClient.makeRequest("", streamPort, callback);
+	}
+	
+	public CameraStatus getLive() {
+		return (CameraStatus) hostClient.makeRequest("", "8081", new RequestSuccessCallback() {
+			
+			@Override
+			public Object onSuccess(InputStream resultStream) throws IOException {
+				
+				return CameraStatus.UNKNOWN;
+			}
+		});
+	}
 
 	public CameraStatus startDetection() {
 		return (CameraStatus) hostClient.makeRequest(getRequestURL(START_URL_TEMPLATE), new RequestSuccessCallback() {
@@ -109,10 +141,10 @@ public class MotionCameraClient {
 			}
 		});
 	}
-
+	
 	@SuppressWarnings("unchecked")
-	public List<CameraConfiguration> getConfigurations() {
-		return (List<CameraConfiguration>) hostClient.makeRequest(getRequestURL(CONFIGURATION_LIST_URL_TEMPLATE), new RequestSuccessCallback() {
+	public HashMap<String, CameraConfiguration> getConfigurations() {
+		return (HashMap<String, CameraConfiguration>) hostClient.makeRequest(getRequestURL(CONFIGURATION_LIST_URL_TEMPLATE), new RequestSuccessCallback() {
 			
 			@Override
 			public Object onSuccess(InputStream resultStream) throws IOException {

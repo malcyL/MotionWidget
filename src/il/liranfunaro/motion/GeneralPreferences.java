@@ -1,8 +1,7 @@
-package il.me.liranfunaro.motion;
+package il.liranfunaro.motion;
 
 import java.util.Map;
 
-import uk.me.malcolmlandon.motion.R;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;

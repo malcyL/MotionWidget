@@ -1,24 +1,24 @@
-package il.me.liranfunaro.motion;
+package il.liranfunaro.motion.client;
 
 import java.net.MalformedURLException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class UriParameters {
+public class UrlParameters {
 	public static final Pattern urlPattern = Pattern.compile("((http|https)://)?([^/:]+)(:(\\d+))?");
 	
 	public final String protocol;
 	public final String host;
 	public final String port;
 	
-	public UriParameters(String protocol, String host, String port) {
+	public UrlParameters(String protocol, String host, String port) {
 		super();
 		this.protocol = protocol;
 		this.host = host;
 		this.port = port;
 	}
 	
-	public UriParameters(String url) throws MalformedURLException {
+	public UrlParameters(String url) throws MalformedURLException {
 		super();
 		Matcher match = urlPattern.matcher(url);
 		if(match.matches()) {
@@ -31,7 +31,11 @@ class UriParameters {
 	}
 	
 	public String getFullUrl() {
-		return protocol+"://"+host+":"+port;
+		return getFullUrl(null);
+	}
+	
+	public String getFullUrl(String differentPort) {
+		return protocol+"://" + host + ":" + (differentPort != null ? differentPort : port);
 	}
 	
 	@Override

@@ -4,6 +4,6 @@
    android:minHeight="40dip"
    android:updatePeriodMillis="3600000"
    android:initialLayout="@layout/widget"
-   android:configure="il.me.liranfunaro.motion.MainActivity" 
+   android:configure="il.liranfunaro.motion.MainActivity" 
 />
 <!--    android:previewImage="@drawable/icon" -->

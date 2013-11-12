@@ -1,4 +1,4 @@
-package il.me.liranfunaro.motion.client;
+package il.liranfunaro.motion.client;
 
 import java.util.regex.Pattern;
 

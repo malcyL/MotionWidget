@@ -1,7 +1,7 @@
-package il.me.liranfunaro.motion.client;
+package il.liranfunaro.motion.client;
 
 
-import il.me.liranfunaro.motion.GeneralPreferences;
+import il.liranfunaro.motion.GeneralPreferences;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,8 +18,8 @@ import android.util.Base64;
 public class MotionHostClient {
 	protected static final Pattern cameraLinkPattern = Pattern.compile("href=('|\")(/(\\d+)/)('|\")");
 	
-	protected final String externalUrlBase;
-	protected final String internalUrlBase;
+	protected final UrlParameters externalUrlBase;
+	protected final UrlParameters internalUrlBase;
 	protected final String authString;
 	
 	protected HostStatus hostStatus = HostStatus.UNKNOWN;
@@ -31,7 +31,7 @@ public class MotionHostClient {
 		this(host.getExternalHost(),host.getInternalHost(),host.getUsername(),host.getPassword(), connectionTimeout);
 	}
 	
-	public MotionHostClient(String externalUrlBase, String internalUrlBase,
+	public MotionHostClient(UrlParameters externalUrlBase, UrlParameters internalUrlBase,
 			String username, String password, int connectionTimeout) {
 		this.externalUrlBase = externalUrlBase;
 		this.internalUrlBase = internalUrlBase;
@@ -104,18 +104,22 @@ public class MotionHostClient {
 		}
 	}
 	
-	protected Object makeRequest(String actionUrl, RequestSuccessCallback action) {
+	public Object makeRequest(String actionUrl, String actionPort, RequestSuccessCallback action) {
 		try {
 			try {
-				return makeSimpleRequest(externalUrlBase + actionUrl, action);
+				return makeSimpleRequest(externalUrlBase.getFullUrl(actionPort) + actionUrl, action);
 			} catch (IOException e) {
-				if(internalUrlBase != null && !internalUrlBase.isEmpty()) {
-					return makeSimpleRequest(internalUrlBase + actionUrl, action);
+				if(internalUrlBase != null) {
+					return makeSimpleRequest(internalUrlBase.getFullUrl(actionPort) + actionUrl, action);
 				}
 			}
 		} catch (IOException e) {}
 		
 		return null;
+	}
+	
+	public Object makeRequest(String actionUrl, RequestSuccessCallback action) {
+		return makeRequest(actionUrl, null, action);
 	}
 	
 	public MotionCameraClient getCamera(String camera) {

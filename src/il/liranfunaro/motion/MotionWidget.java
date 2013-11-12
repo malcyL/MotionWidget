@@ -1,12 +1,13 @@
-package uk.me.malcolmlandon.motion;
+package il.liranfunaro.motion;
 
-import il.me.liranfunaro.motion.GeneralPreferences;
-import il.me.liranfunaro.motion.HostPreferences;
-import uk.me.malcolmlandon.motion.R;
-import il.me.liranfunaro.motion.client.CameraStatus;
-import il.me.liranfunaro.motion.client.MotionCameraClient;
-import il.me.liranfunaro.motion.exceptions.HostNotExistException;
+import il.liranfunaro.motion.R;
+import il.liranfunaro.motion.client.CameraStatus;
+import il.liranfunaro.motion.client.MotionCameraClient;
+import il.liranfunaro.motion.exceptions.HostNotExistException;
+
 import java.util.Calendar;
+
+import uk.me.malcolmlandon.motion.MotionWidgetOldConfigure;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -29,6 +30,7 @@ public class MotionWidget extends AppWidgetProvider {
 	public static String ACTION_WIDGET_START = "ActionWidgetStart";
 	public static String ACTION_WIDGET_PAUSE = "ActionWidgetPause";
 	public static String ACTION_WIDGET_SNAPSHOT = "ActionWidgetSnapshot";
+	public static String ACTION_WIDGET_LIVE_STREAM = "ActionWidgetLiveStream";
 	public static String STATUS_TEXT_FORMAT = "%s #%s: %s";
 
 	@Override
@@ -60,8 +62,11 @@ public class MotionWidget extends AppWidgetProvider {
 
 		Intent snapshotIntent = new Intent(context, MotionWidget.class);
 		snapshotIntent.setAction(ACTION_WIDGET_SNAPSHOT);
-		snapshotIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
-				appWidgetId);
+		snapshotIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+		
+		Intent liveStreamIntent = new Intent(context, MotionWidget.class);
+		liveStreamIntent.setAction(ACTION_WIDGET_LIVE_STREAM);
+		liveStreamIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
 
 		PendingIntent statusPendingIntent = PendingIntent.getBroadcast(context,
 				appWidgetId, statusIntent, 0);
@@ -71,6 +76,8 @@ public class MotionWidget extends AppWidgetProvider {
 				appWidgetId, pauseIntent, 0);
 		PendingIntent snapshotPendingIntent = PendingIntent.getBroadcast(
 				context, appWidgetId, snapshotIntent, 0);
+		PendingIntent liveStreamPendingIntent = PendingIntent.getBroadcast(
+				context, appWidgetId, liveStreamIntent, 0);
 
 		RemoteViews remoteViews = new RemoteViews(context.getPackageName(),
 				R.layout.widget);
@@ -83,6 +90,8 @@ public class MotionWidget extends AppWidgetProvider {
 				pausePendingIntent);
 		remoteViews.setOnClickPendingIntent(R.id.button_snapshot,
 				snapshotPendingIntent);
+		remoteViews.setOnClickPendingIntent(R.id.button_livestream,
+				liveStreamPendingIntent);
 
 		appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
 		
@@ -247,7 +256,7 @@ public class MotionWidget extends AppWidgetProvider {
 				CameraStatus status = null;
 
 				try {
-					status = doAction(camera, action);
+					status = doAction(context, host, camera, action);
 				} finally {
 					updateWidget(context, mgr, rv, true, getStatusText(host, camera, status), appWidgetId);
 				}
@@ -283,7 +292,7 @@ public class MotionWidget extends AppWidgetProvider {
 		appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
 	}
 
-	public static CameraStatus doAction(MotionCameraClient camera, String action) {
+	public static CameraStatus doAction(Context context, HostPreferences host, MotionCameraClient camera, String action) {
 		if (action.equals(ACTION_WIDGET_STATUS)) {
 			return camera.getStatus();
 		} else if (action.equals(ACTION_WIDGET_START)) {
@@ -292,6 +301,12 @@ public class MotionWidget extends AppWidgetProvider {
 			return camera.pauseDetection();
 		} else if (action.equals(ACTION_WIDGET_SNAPSHOT)) {
 			camera.snapshot();
+			return camera.getStatus();
+		} else if(action.equals(ACTION_WIDGET_LIVE_STREAM)) {
+			Intent intent = new Intent(context, MjpegActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			GenericCameraActivity.setIntentParameters(intent, host.getUUID(), camera.getCameraNumber());
+			context.startActivity(intent);
 			return camera.getStatus();
 		}
 

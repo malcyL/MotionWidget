@@ -1,11 +1,11 @@
-package il.me.liranfunaro.motion;
+package il.liranfunaro.motion;
 
 
-import il.me.liranfunaro.motion.exceptions.HostNotExistException;
+import il.liranfunaro.motion.client.UrlParameters;
+import il.liranfunaro.motion.exceptions.HostNotExistException;
 
 import java.net.MalformedURLException;
 
-import uk.me.malcolmlandon.motion.R;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -133,7 +133,7 @@ public class HostPreferencesActivity extends Activity {
 			}
 			
 			try {
-				UriParameters url = new UriParameters(currentText);
+				UrlParameters url = new UrlParameters(currentText);
 				input.clear();
 				input.append(url.toString());
 				setViewState(v,true);

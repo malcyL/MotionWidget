@@ -1,15 +1,13 @@
-package il.me.liranfunaro.motion;
+package il.liranfunaro.motion;
 
-import il.me.liranfunaro.motion.client.HostStatus;
-import il.me.liranfunaro.motion.client.MotionHostClient;
-import il.me.liranfunaro.motion.exceptions.HostNotExistException;
+import il.liranfunaro.motion.client.HostStatus;
+import il.liranfunaro.motion.client.MotionHostClient;
+import il.liranfunaro.motion.exceptions.HostNotExistException;
 
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.TreeSet;
 
-import uk.me.malcolmlandon.motion.MotionWidget;
-import uk.me.malcolmlandon.motion.R;
 import android.app.Activity;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
@@ -51,6 +49,7 @@ public class HostListAdapter extends BaseExpandableListAdapter {
 			try {
 				hostsSet.add(new HostPreferences(context, uuid, false));
 			} catch (HostNotExistException e) {
+				Log.e(getClass().getSimpleName(), "Missing Host", e);
 			}
 		}
 		
@@ -123,8 +122,7 @@ public class HostListAdapter extends BaseExpandableListAdapter {
 					@Override
 					public void onClick(View v) {
 						Intent intent = new Intent(context, CameraConfigurationActivity.class);
-						intent.putExtra(CameraConfigurationActivity.EXTRA_HOST_UUID, hosts[groupPosition].getUUID().toString());
-						intent.putExtra(CameraConfigurationActivity.EXTRA_CAMERA_NUMBER, cameraNumber);
+						GenericCameraActivity.setIntentParameters(intent, hosts[groupPosition].getUUID(), cameraNumber);
 						itsActivity.startActivity(intent);
 					}
 				});
@@ -155,8 +153,18 @@ public class HostListAdapter extends BaseExpandableListAdapter {
 			});
 			convertView.setClickable(true);
 		} else {
-			convertView.setClickable(false);
-			convertView.setOnClickListener(null);
+			convertView.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					Intent intent = new Intent(context, MjpegActivity.class);
+					GenericCameraActivity.setIntentParameters(intent, hosts[groupPosition].getUUID(), cameraNumber);
+					itsActivity.startActivity(intent);
+				}
+			});
+			convertView.setClickable(true);
+//			convertView.setClickable(false);
+//			convertView.setOnClickListener(null);
 		}
 		
 		return convertView;
@@ -238,7 +246,7 @@ public class HostListAdapter extends BaseExpandableListAdapter {
         hostNameView.setText(host.getName());
         
 		TextView hostUrl = (TextView) convertView.findViewById(R.id.hostUrl);
-		hostUrl.setText(host.getExternalHost());
+		hostUrl.setText(host.getExternalHost().getHost());
 		
 		TextView hostUsername = (TextView) convertView.findViewById(R.id.hostUsername);
 		hostUsername.setText(host.getUsername());

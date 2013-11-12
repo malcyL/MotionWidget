@@ -19,5 +19,7 @@
     <string name="write_configuration_title">Write Configuration</string>
     <string name="write_configuration_text">This will write the current configuration to the configuration file.
         Are you sure you want to write the configuration?</string>
+        
+    <string name="title_mjpeg">MJPEG</string>
 
 </resources>

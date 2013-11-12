@@ -1,8 +1,7 @@
-package il.me.liranfunaro.motion.client;
+package il.liranfunaro.motion.client;
 
 import java.io.InputStream;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Scanner;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
@@ -45,8 +44,8 @@ public class CameraConfiguration {
 		this.value = value;
 	}
 	
-	public static List<CameraConfiguration> getCameraConfiguration(InputStream inputStream) {
-		LinkedList<CameraConfiguration> confList = new LinkedList<CameraConfiguration>();
+	public static HashMap<String, CameraConfiguration> getCameraConfiguration(InputStream inputStream) {
+		HashMap<String, CameraConfiguration> conf = new HashMap<String, CameraConfiguration>();
 		
 		Scanner streamScanner = null;
 		
@@ -55,7 +54,8 @@ public class CameraConfiguration {
 			
 			while (streamScanner.findWithinHorizon(PATTERN, 0) != null) {
 			  MatchResult m = streamScanner.match();
-			  confList.add(new CameraConfiguration(m.group(GROUP_NAME), m.group(GROUP_ADDRESS), m.group(GROUP_VALUE)));
+			  String name = m.group(GROUP_NAME);
+			  conf.put(name, new CameraConfiguration(name, m.group(GROUP_ADDRESS), m.group(GROUP_VALUE)));
 			}
 		} finally {
 			if(streamScanner != null) {
@@ -63,6 +63,6 @@ public class CameraConfiguration {
 			}
 		}
 		
-		return confList;
+		return conf;
 	}
 }

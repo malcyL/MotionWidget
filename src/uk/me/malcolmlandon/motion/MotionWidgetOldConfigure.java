@@ -1,7 +1,8 @@
 package uk.me.malcolmlandon.motion;
 
-import il.me.liranfunaro.motion.HostPreferences;
-import il.me.liranfunaro.motion.exceptions.HostNotExistException;
+import il.liranfunaro.motion.HostPreferences;
+import il.liranfunaro.motion.MotionWidget;
+import il.liranfunaro.motion.exceptions.HostNotExistException;
 
 import java.net.MalformedURLException;
 
@@ -77,10 +78,10 @@ public class MotionWidgetOldConfigure {
 		}
     }
     
-    HostPreferences migratePreferences() throws HostNotExistException {
+    public HostPreferences migratePreferences() throws HostNotExistException {
     	HostPreferences host = createHost();
     	if(host == null) {
-    		throw new HostNotExistException("Host does not exist");
+    		throw new HostNotExistException("Host does not exist", "OLD_CONFIG");
     	}
     	
     	MotionWidget.setWidgetPreferences(context, appWidgetId, host.getUUID().toString(), loadPrefernece(MOTION_WIDGET_CAMERA));

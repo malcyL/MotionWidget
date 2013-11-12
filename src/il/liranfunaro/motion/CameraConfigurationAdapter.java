@@ -1,13 +1,14 @@
-package il.me.liranfunaro.motion;
+package il.liranfunaro.motion;
 
-import il.me.liranfunaro.motion.client.CameraConfiguration;
-import il.me.liranfunaro.motion.client.CameraStatus;
-import il.me.liranfunaro.motion.client.MotionCameraClient;
+import il.liranfunaro.motion.client.CameraConfiguration;
+import il.liranfunaro.motion.client.CameraStatus;
+import il.liranfunaro.motion.client.MotionCameraClient;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
-import uk.me.malcolmlandon.motion.R;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -28,7 +29,9 @@ public class CameraConfigurationAdapter extends BaseAdapter {
 	private final MotionCameraClient camera;
 	private CameraConfiguration[] configurations = null;
 	private int configCount = 0;
-	private List<CameraConfiguration> allConfigurations = null;
+	
+	private Set<Map.Entry<String, CameraConfiguration>> allConfigurationsEntrySet = null;
+	
 	private boolean[] updating = null;
 	
 	CameraConfigurationAdapter(Activity itsActivity, MotionCameraClient camera) {
@@ -37,20 +40,34 @@ public class CameraConfigurationAdapter extends BaseAdapter {
 		getConfigurations();
 	}
 	
+	private void setConfigArray() {
+		configCount = allConfigurationsEntrySet.size();
+		
+		if(configurations == null) {
+			configurations = new CameraConfiguration[configCount];
+		} 
+		
+		int i = 0;
+		
+		for (Map.Entry<String, CameraConfiguration> entry : allConfigurationsEntrySet) {
+			configurations[i++] = entry.getValue();
+		}
+	}
+	
 	private void getConfigurations() {
 		
-		new AsyncTask<Void, Void, List<CameraConfiguration>>() {
+		new AsyncTask<Void, Void, HashMap<String, CameraConfiguration>>() {
 
 			@Override
-			protected List<CameraConfiguration> doInBackground(Void... params) {
+			protected HashMap<String, CameraConfiguration> doInBackground(Void... params) {
 				return camera.getConfigurations();
 			}
 			
 			@Override
-			protected void onPostExecute(List<CameraConfiguration> result) {
-				allConfigurations = result;
-				configCount = allConfigurations.size();
-				configurations = allConfigurations.toArray(new CameraConfiguration[configCount]);
+			protected void onPostExecute(HashMap<String, CameraConfiguration> result) {
+				allConfigurationsEntrySet = result.entrySet();
+				setConfigArray();
+				
 				// Automatically set to false
 				updating = new boolean[configurations.length];
 				notifyDataSetChanged();
@@ -62,15 +79,14 @@ public class CameraConfigurationAdapter extends BaseAdapter {
 	
 	public void filter(String pattern) {
 		if(pattern == null || pattern.isEmpty()) {
-			configurations = allConfigurations.toArray(configurations);
-			configCount = configurations.length;
+			setConfigArray();
 		} else {
 			Pattern regex = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
 			configCount = 0;
 			
-			for (CameraConfiguration c : allConfigurations) {
-				if(regex.matcher(c.getName()).find() || regex.matcher(c.getValue()).find()) {
-					configurations[configCount++] = c;
+			for (Map.Entry<String, CameraConfiguration> entry : allConfigurationsEntrySet) {
+				if(regex.matcher(entry.getKey()).find() || regex.matcher(entry.getValue().getValue()).find()) {
+					configurations[configCount++] = entry.getValue();
 				}
 			}
 		}

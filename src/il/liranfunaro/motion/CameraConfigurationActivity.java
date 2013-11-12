@@ -1,8 +1,5 @@
-package il.me.liranfunaro.motion;
+package il.liranfunaro.motion;
 
-import il.me.liranfunaro.motion.client.MotionCameraClient;
-import uk.me.malcolmlandon.motion.R;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Context;
@@ -17,52 +14,25 @@ import android.view.Window;
 import android.widget.ListView;
 import android.widget.SearchView;
 
-public class CameraConfigurationActivity extends Activity {
-	
-	public static final String EXTRA_HOST_UUID = "host_uuid";
-	public static final String EXTRA_CAMERA_NUMBER = "camera_number";
-	
-	private MotionCameraClient cameraClient = null;
+public class CameraConfigurationActivity extends GenericCameraActivity {
 	
 	private CameraConfigurationAdapter adapter = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_camera_configuration);
+		
+		ListView configList = (ListView) findViewById(R.id.camera_configuration_list);
+		adapter = new CameraConfigurationAdapter(this, cameraClient);
+		configList.setAdapter(adapter);
+	}
+	
+	@Override
+	protected void requestWindowFeatures() {
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		
-		setContentView(R.layout.activity_camera_configuration);
 		// Show the Up button in the action bar.
-		setupActionBar();
-		
-		Bundle extras = getIntent().getExtras();
-		if (extras == null) {
-			finish();
-		}
-		
-		String hostUUID = extras.getString(EXTRA_HOST_UUID);
-		String camera = extras.getString(EXTRA_CAMERA_NUMBER);
-		
-		if(hostUUID == null || camera == null) {
-			finish();
-		}
-		
-		try {
-			HostPreferences host = new HostPreferences(this, hostUUID, false);
-			cameraClient = new MotionCameraClient(host, camera, GeneralPreferences.getConnectionTimeout(this));
-			
-			ListView configList = (ListView) findViewById(R.id.camera_configuration_list);
-			adapter = new CameraConfigurationAdapter(this, cameraClient);
-			configList.setAdapter(adapter);
-		} catch (Exception e) {
-			finish();
-		}
-	}
-
-	/**
-	 * Set up the {@link android.app.ActionBar}.
-	 */
-	private void setupActionBar() {
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
@@ -95,7 +65,7 @@ public class CameraConfigurationActivity extends Activity {
 	    
 		return true;
 	}
-
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -140,6 +110,7 @@ public class CameraConfigurationActivity extends Activity {
 			NavUtils.navigateUpFromSameTask(this);
 			return true;
 		}
+		
 		return super.onOptionsItemSelected(item);
 	}
 

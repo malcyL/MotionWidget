@@ -1,6 +1,5 @@
-package il.me.liranfunaro.motion;
+package il.liranfunaro.motion;
 
-import uk.me.malcolmlandon.motion.R;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.appwidget.AppWidgetManager;
