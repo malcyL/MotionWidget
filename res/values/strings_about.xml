@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="contributors_title">Contributors</string>
+    <string name="liran_funaro_name">Liran Funaro</string>
+    <string name="liran_funaro_description">Developer</string>
+    <string name="malcolm_landon_name">Malcolm Landon</string>
+    <string name="malcolm_landon_description">Former Developer / Founder</string>
+    <string name="or_eitan_name">Or Eitan</string>
+    <string name="or_eitan_description">Icon Designer</string>
+    <string name="open_source_title">Github - Open Source</string>
+    <string name="open_source_ref">
+"Motion Control is open source project, continuing of Motion Widget app.
+The source code is available on github here:
+https://github.com/fonaro/MotionWidget"
+    </string>
+    <string name="lincece">License Agreement</string>
+    <string name="lincece_ref">
+"Motion Widget is licensed under the Apache Licence, Version 2.0:
+http://www.apache.org/licenses/LICENSE-2.0"
+	</string>
+
+    <string name="motion_project_title">Linux Motion Detection</string>
+    <string name="motion_project_ref">
+"Motion Control is an Android app for controlling the linux motion detection software Motion
+http://www.lavrsen.dk/foswiki/bin/view/Motion"
+    </string>
+</resources>

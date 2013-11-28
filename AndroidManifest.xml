@@ -1,29 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="uk.me.malcolmlandon.motion"
-      android:versionCode="2"
-      android:versionName="1.0.1">
-    <application android:icon="@drawable/icon" android:label="@string/app_name">
+    package="il.liranfunaro.motion"
+    android:versionCode="3"
+    android:versionName="2.0" >
 
-    <!-- Broadcast Receiver that will process AppWidget updates -->
-    <receiver android:name=".MotionWidget" android:label="@string/app_name">
-        <intent-filter>
-            <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            <action android:name="uk.me.malcolmlandon.motion.MotionWidget.ACTION_WIDGET_STATUS"/>
-            <action android:name="uk.me.malcolmlandon.motion.MotionWidget.ACTION_WIDGET_START"/>
-            <action android:name="uk.me.malcolmlandon.motion.MotionWidget.ACTION_WIDGET_PAUSE"/>
-        </intent-filter>
-        <meta-data android:name="android.appwidget.provider"
-                   android:resource="@xml/motion_widget_provider" />
-    </receiver>
-    
-    <activity android:name=".MotionWidgetConfigure">
-        <intent-filter>
-            <action android:name="uk.me.malcolmlandon.motion.MotionWidget.ACTION_WIDGET_CONFIGURE" />
-        </intent-filter>
-    </activity>    
+    <uses-sdk
+        android:minSdkVersion="11"
+        android:targetSdkVersion="18" />
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name" >
+         <activity
+            android:name="il.liranfunaro.motion.MjpegActivity"
+            android:label="@string/title_mjpeg"
+            android:parentActivityName="il.liranfunaro.motion.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="il.liranfunaro.motion.MainActivity" />
+        </activity>
+        
+        <activity
+            android:name="il.liranfunaro.motion.SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName="il.liranfunaro.motion.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="il.liranfunaro.motion.MainActivity" />
+        </activity>
+
+        <!-- Broadcast Receiver that will process AppWidget updates -->
+        <receiver
+            android:name="il.liranfunaro.motion.MotionWidget"
+            android:label="@string/widget_name" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+<!--                 <action android:name="il.liranfunaro.motion.MotionWidget.ACTION_WIDGET_STATUS" /> -->
+<!--                 <action android:name="il.liranfunaro.motion.MotionWidget.ACTION_WIDGET_START" /> -->
+<!--                 <action android:name="il.liranfunaro.motion.MotionWidget.ACTION_WIDGET_PAUSE" /> -->
+                <action android:name="il.liranfunaro.motion.MotionWidget.ACTION_WIDGET_LIVE_STREAM" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/motion_widget_provider" />
+        </receiver>
+
+        <activity
+            android:name="il.liranfunaro.motion.MainActivity"
+            android:label="@string/title_activity_main" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="il.liranfunaro.motion.HostPreferencesActivity"
+            android:label="@string/title_activity_add_host"
+            android:parentActivityName="il.liranfunaro.motion.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="il.liranfunaro.motion.MainActivity" />
+        </activity>
+        <activity
+            android:name="il.liranfunaro.motion.AboutActivity"
+            android:label="@string/title_activity_about"
+            android:parentActivityName="il.liranfunaro.motion.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="il.liranfunaro.motion.MainActivity" />
+        </activity>
+        <activity
+            android:name="il.liranfunaro.motion.CameraConfigurationActivity"
+            android:label="@string/title_activity_camera_configuration"
+            android:launchMode="singleTop"
+            android:parentActivityName="il.liranfunaro.motion.MainActivity" >
+            <intent-filter>
+		        <action android:name="android.intent.action.SEARCH" />
+		    </intent-filter>
+		    <meta-data android:name="android.app.default_searchable"
+                   android:value="il.liranfunaro.motion.CameraConfigurationActivity" />
+		    <meta-data android:name="android.app.searchable"
+                   android:resource="@xml/searchable"/>
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="il.liranfunaro.motion.MainActivity" />
+        </activity>
     </application>
-    <uses-sdk android:minSdkVersion="4" />
-    <uses-permission android:name="android.permission.INTERNET"/>
-</manifest> 
+
+</manifest>

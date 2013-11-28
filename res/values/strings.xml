@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Motion Widget</string>
+
+    <string name="app_name">Motion Control</string>
+    <string name="widget_name">Motion Widget</string>
     <string name="empty"></string>
+    <string name="place_holder">place holder</string>
+    <string name="add_host">Add Host</string>
+    <string name="about">About</string>
+    <string name="not_synced">not synced</string>
+    <string name="camera_icon_description">Refresh camera status</string>
+    <string name="title_activity_about">About Motion Control</string>
+    <string name="title_activity_camera_configuration">Camera Configuration</string>
+    <string name="action_write">Write</string>
+    
+    <string name="configuration_name">Configuration Name</string>
+    <string name="configuration_value">configuration value</string>
+    <string name="edit_configuration_title">Edit Configuration</string>
+    <string name="write_configuration_title">Write Configuration</string>
+    <string name="write_configuration_text">This will write the current configuration to the configuration file.
+        Are you sure you want to write the configuration?</string>
+        
+    <string name="title_mjpeg">MJPEG</string>
+
 </resources>

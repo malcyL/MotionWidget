@@ -1,0 +1,11 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+	<EditTextPreference
+        android:inputType="numberDecimal"
+        android:defaultValue="30"
+        android:key="connection_timeout"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="@string/pref_connection_timeout" />
+
+</PreferenceScreen>

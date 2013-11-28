@@ -1,0 +1,29 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity" >
+
+    <Button
+        android:id="@+id/add_host"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
+        android:text="@string/add_host" />
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:layout_margin="5dp"
+        android:background="@android:color/background_light" />
+
+    <ExpandableListView
+        android:id="@+id/hosts_list"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:choiceMode="singleChoice" >
+
+    </ExpandableListView>
+
+</LinearLayout>

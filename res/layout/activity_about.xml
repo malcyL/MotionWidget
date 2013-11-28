@@ -1,0 +1,207 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
+    android:scrollbars="vertical" >
+    
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+	    android:layout_margin="10dp" >
+        
+        <LinearLayout
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="vertical"
+	        android:paddingBottom="15dp"
+	        android:divider="?android:dividerHorizontal"
+	        android:showDividers="middle" >
+	        
+	        <TextView
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="@string/open_source_title"
+	            android:textAppearance="?android:attr/textAppearanceLarge" />
+	        
+	        <TextView
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="@string/open_source_ref"
+	            android:layout_marginLeft="10dp"
+	            android:autoLink="web"
+	            android:textAppearance="?android:attr/textAppearanceSmall" />
+        </LinearLayout>
+        
+        <LinearLayout
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="vertical"
+	        android:paddingBottom="15dp"
+	        android:divider="?android:dividerHorizontal"
+	        android:showDividers="middle" >
+	        
+	        <TextView
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="@string/lincece"
+	            android:textAppearance="?android:attr/textAppearanceLarge" />
+	        
+	        <TextView
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="@string/lincece_ref"
+	            android:layout_marginLeft="10dp"
+	            android:autoLink="web"
+	            android:textAppearance="?android:attr/textAppearanceSmall" />
+        </LinearLayout>
+        
+         <LinearLayout
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="vertical"
+	        android:paddingBottom="15dp"
+	        android:divider="?android:dividerHorizontal"
+	        android:showDividers="middle" >
+	        
+	        <TextView
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="@string/motion_project_title"
+	            android:textAppearance="?android:attr/textAppearanceLarge" />
+	        
+	        <TextView
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="@string/motion_project_ref"
+	            android:layout_marginLeft="10dp"
+	            android:autoLink="web"
+	            android:textAppearance="?android:attr/textAppearanceSmall" />
+        </LinearLayout>
+        
+        <LinearLayout
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="vertical"
+	        android:paddingBottom="15dp"
+	        android:divider="?android:dividerHorizontal"
+	        android:showDividers="middle" >
+	        <TextView
+	            android:id="@+id/contributors_view"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="@string/contributors_title"
+	            android:textAppearance="?android:attr/textAppearanceLarge" />
+	        
+	        <LinearLayout
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            android:orientation="horizontal"
+	            android:layout_margin="10dp" >
+	
+	            <ImageView
+	                android:id="@+id/liran_funaro_image_view"
+	                android:layout_width="60dp"
+	                android:layout_height="wrap_content"
+	                android:adjustViewBounds="true"
+	                android:layout_marginRight="10dp"
+	                android:contentDescription="@string/liran_funaro_name"
+	                android:src="@drawable/liran_funaro_image" />
+	            
+	            <LinearLayout
+			        android:layout_width="fill_parent"
+			        android:layout_height="wrap_content"
+			        android:orientation="vertical" >
+	            
+			        <TextView
+			            android:id="@+id/liran_funaro_name_view"
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:text="@string/liran_funaro_name"
+			            android:textAppearance="?android:attr/textAppearanceMedium" />
+			        
+			        <TextView
+			            android:id="@+id/liran_funaro_description_view"
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:text="@string/liran_funaro_description"
+			            android:textAppearance="?android:attr/textAppearanceSmall" />
+		        </LinearLayout>
+	        </LinearLayout>
+	
+	        <LinearLayout
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            android:orientation="horizontal"
+	            android:layout_margin="10dp" >
+	
+	            <ImageView
+	                android:id="@+id/malcolm_landon_image_view"
+	                android:layout_width="60dp"
+	                android:layout_height="wrap_content"
+	                android:adjustViewBounds="true"
+	                android:layout_marginRight="10dp"
+	                android:contentDescription="@string/malcolm_landon_name"
+	                android:src="@drawable/malcolm_landon_image" />
+	            
+	            <LinearLayout
+			        android:layout_width="fill_parent"
+			        android:layout_height="wrap_content"
+			        android:orientation="vertical" >
+	            
+			        <TextView
+			            android:id="@+id/malcolm_landon_name_view"
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:text="@string/malcolm_landon_name"
+			            android:textAppearance="?android:attr/textAppearanceMedium" />
+			        
+			        <TextView
+			            android:id="@+id/malcolm_landon_description_view"
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:text="@string/malcolm_landon_description"
+			            android:textAppearance="?android:attr/textAppearanceSmall" />
+		        </LinearLayout>
+	        </LinearLayout>
+	    
+	     <LinearLayout
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            android:orientation="horizontal"
+	            android:layout_margin="10dp" >
+	
+	            <ImageView
+	                android:id="@+id/or_eitan_image_view"
+	                android:layout_width="60dp"
+	                android:layout_height="wrap_content"
+	                android:adjustViewBounds="true"
+	                android:layout_marginRight="10dp"
+	                android:contentDescription="@string/or_eitan_name"
+	                android:src="@drawable/or_eitan_image" />
+	            
+	            <LinearLayout
+			        android:layout_width="fill_parent"
+			        android:layout_height="wrap_content"
+			        android:orientation="vertical" >
+	            
+			        <TextView
+			            android:id="@+id/or_eitan_name_view"
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:text="@string/or_eitan_name"
+			            android:textAppearance="?android:attr/textAppearanceMedium" />
+			        
+			        <TextView
+			            android:id="@+id/or_eitan_description_view"
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:text="@string/or_eitan_description"
+			            android:textAppearance="?android:attr/textAppearanceSmall" />
+		        </LinearLayout>
+	        </LinearLayout>
+	        
+	     
+	    </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>
